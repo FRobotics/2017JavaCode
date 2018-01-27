@@ -3,6 +3,8 @@ package main.java.frc.team4150.robot.command.base;
 import main.java.frc.team4150.robot.RobotBase;
 
 public abstract class Command {
+	
+	public abstract void init();
 
     /**
      * the periodic function for this command

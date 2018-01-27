@@ -21,7 +21,7 @@ public class CommandManager {
      * @param command
      */
     public void push(Command command) {
-    	if(current == null) current = command;
+    	if(current == null) setCurrent(command);
     	else this.commands.add(command);
     }
 
@@ -32,10 +32,15 @@ public class CommandManager {
     public void periodic(RobotBase robot) {
         if (!paused) {
             if (current != null && current.periodic(robot)) {
-                if (commands.size() > 0) current = commands.remove(0);
+                if (commands.size() > 0) setCurrent(commands.remove(0));
                 else current = null;
             }
         }
+    }
+    
+    public void setCurrent(Command command) {
+    	current = command;
+    	current.init();
     }
 
 }

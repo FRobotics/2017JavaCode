@@ -1,6 +1,5 @@
 package main.java.frc.team4150.robot.subsystem;
 
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Jaguar;
 import edu.wpi.first.wpilibj.PWMSpeedController;
 import edu.wpi.first.wpilibj.Talon;
@@ -9,6 +8,7 @@ import main.java.frc.team4150.robot.input.joystick.Axis;
 import main.java.frc.team4150.robot.input.joystick.Button;
 import main.java.frc.team4150.robot.input.joystick.ControllerInput;
 import main.java.frc.team4150.robot.subsystem.base.SubsystemBase;
+import main.java.frc.team4150.robot.util.Distance;
 import main.java.frc.team4150.robot.util.Util;
 
 public class DriveSystem extends SubsystemBase {
@@ -19,31 +19,35 @@ public class DriveSystem extends SubsystemBase {
 
 	private PWMSpeedController leftMotor;
 	private PWMSpeedController rightMotor;
-	
+
 	private double leftMotorSpeed;
 	private double rightMotorSpeed;
+	
+	private Distance wheelRadius;
 
-	public DriveSystem(int leftMotorChannel, int rightMotorChannel, MotorType type) {
+	public DriveSystem(int leftMotorChannel, int rightMotorChannel, MotorType type, Distance wheelRadius) {
 		switch (type) {
-			case VICTOR:
-				leftMotor = new Victor(leftMotorChannel);
-				rightMotor = new Victor(rightMotorChannel);
-				break;
-			case TALON:
-				leftMotor = new Talon(leftMotorChannel);
-				rightMotor = new Talon(rightMotorChannel);
-				break;
-			case JAGUAR:
-				leftMotor = new Jaguar(leftMotorChannel);
-				rightMotor = new Jaguar(rightMotorChannel);
-				break;
-			default:
-				leftMotor = null;
-				rightMotor = null;
+		case VICTOR:
+			leftMotor = new Victor(leftMotorChannel);
+			rightMotor = new Victor(rightMotorChannel);
+			break;
+		case TALON:
+			leftMotor = new Talon(leftMotorChannel);
+			rightMotor = new Talon(rightMotorChannel);
+			break;
+		case JAGUAR:
+			leftMotor = new Jaguar(leftMotorChannel);
+			rightMotor = new Jaguar(rightMotorChannel);
+			break;
+		default:
+			leftMotor = null;
+			rightMotor = null;
 		}
-		
+
 		leftMotorSpeed = 0;
 		rightMotorSpeed = 0;
+		
+		this.wheelRadius = wheelRadius;
 	}
 
 	@Override
@@ -56,6 +60,7 @@ public class DriveSystem extends SubsystemBase {
 
 	/**
 	 * Sets the speed of the two motors individually
+	 * 
 	 * @param leftMotorSpeed
 	 * @param rightMotorSpeed
 	 */
@@ -70,59 +75,72 @@ public class DriveSystem extends SubsystemBase {
 	public void stop() {
 		setSpeed(0, 0);
 	}
-	
+
 	/**
-	 * Drives the robot how we want it to. The name might change or I'll add a list of features
+	 * Drives the robot how we want it to
+	 * <ul>
+	 * <li>the left stick's Y is forward an backward</li>
+	 * <li>the right stick's X is left and right</li>
+	 * </ul>
+	 * 
 	 * @param controller
 	 */
-	public void drive(ControllerInput controller) {
-		
-		double fb = controller.getAxis(Axis.RIGHT_X); //Why do these need to be flipped???
-		double lr = controller.getAxis(Axis.LEFT_Y);
-		
-		if(Math.abs(fb) < 0.2) fb = 0;
-		if(Math.abs(lr) < 0.2) lr = 0;
-		
-		//start out with just forward and backward
-        double left, right;
-        left = right = fb;
+	public void customDrive(ControllerInput controller) {
 
-        //apply turning v2
-        if(Math.abs(lr) > 0.2) {
-            if (fb > 0.0) {
-                if (lr > 0.0) {
-                    left = fb - lr;
-                    right = Math.max(fb, lr);
-                } else {
-                    left = Math.max(fb, -lr);
-                    right = fb + lr;
-                }
-            } else {
-                if (lr > 0.0) {
-                    left = -Math.max(-fb, lr);
-                    right = fb + lr;
-                } else {
-                    left = fb - lr;
-                    right = -Math.max(-fb, -lr);
-                }
-            }
-        }
+		double fb = -controller.getAxis(Axis.LEFT_Y); // inverted so up is forward (positive = forward)
+		double lr = -controller.getAxis(Axis.RIGHT_X); // inverted so left turns left & right turns right
 
-        //apply slow mode
-        if(controller.buttonDown(Button.RIGHT_BUMPER)) {
-            right /= 2;
-            left /= 2;
-        }
+		if (Math.abs(fb) < 0.2)
+			fb = 0;
+		if (Math.abs(lr) < 0.2)
+			lr = 0;
 
-        leftMotorSpeed = left;
-        rightMotorSpeed = right;
-        
+		// start out with just forward and backward
+		double left, right;
+		left = right = fb;
+
+		// apply turning v2
+		if (Math.abs(lr) > 0.2) {
+			if (fb > 0.0) {
+				if (lr > 0.0) {
+					left = fb - lr;
+					right = Math.max(fb, lr);
+				} else {
+					left = Math.max(fb, -lr);
+					right = fb + lr;
+				}
+			} else {
+				if (lr > 0.0) {
+					left = -Math.max(-fb, lr);
+					right = fb + lr;
+				} else {
+					left = fb - lr;
+					right = -Math.max(-fb, -lr);
+				}
+			}
+		}
+
+		// apply slow mode
+		if (controller.buttonDown(Button.RIGHT_BUMPER)) {
+			right /= 2;
+			left /= 2;
+		}
+
+		System.out.println("o:"+left + "/" + right);
+
+		leftMotorSpeed = left;
+		rightMotorSpeed = right;
+
 	}
 
 	@Override
 	public void periodic() {
 		leftMotor.set(Util.limit(leftMotorSpeed));
-		rightMotor.set(Util.limit(rightMotorSpeed));
+		rightMotor.set(Util.limit(-rightMotorSpeed));
+	}
+	
+	public Distance getWheelRadius() {
+		return wheelRadius;
 	}
 
 }

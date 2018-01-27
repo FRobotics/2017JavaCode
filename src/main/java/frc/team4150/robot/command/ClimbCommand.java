@@ -13,5 +13,10 @@ public class ClimbCommand extends Command {
 		}*/
 		return false;
 	}
+
+	@Override
+	public void init() {
+		
+	}
 	
 }

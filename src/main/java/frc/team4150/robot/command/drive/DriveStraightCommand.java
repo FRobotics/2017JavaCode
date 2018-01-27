@@ -2,23 +2,25 @@ package main.java.frc.team4150.robot.command.drive;
 
 import main.java.frc.team4150.robot.RobotBase;
 import main.java.frc.team4150.robot.subsystem.DriveSystem;
-import main.java.frc.team4150.robot.util.equation.SpeedDistanceTimeEquation;
+import main.java.frc.team4150.robot.util.Distance;
+import main.java.frc.team4150.robot.util.Time;
+import main.java.frc.team4150.robot.util.Time.Unit;
 
 public class DriveStraightCommand extends DriveCommand {
 
-	public DriveStraightCommand(DriveSystem driveSystem, SpeedDistanceTimeEquation equation) {
-		super(driveSystem, equation);
+	public DriveStraightCommand(DriveSystem driveSystem, Distance distance, Time time) {
+		super(driveSystem, distance, time);
 	}
 
 	@Override
 	public boolean periodic(RobotBase robot) {
-		getDriveSystem().setSpeed(getEquation().get(SpeedDistanceTimeEquation.Name.SPEED),
-				getEquation().get(SpeedDistanceTimeEquation.Name.SPEED));
-		if (System.currentTimeMillis() - getStartTime() > getEquation().get(SpeedDistanceTimeEquation.Name.TIME)) {
+		System.out.println(getTime().to(Unit.MILLIS) + "::" + getSpeed());
+		getDriveSystem().setSpeed(getSpeed(), getSpeed());
+		if (System.currentTimeMillis() - getStartTime() > getTime().to(Unit.MILLIS)) {
 			getDriveSystem().stop();
 			return true;
 		}
 		return false;
 	}
-	
+
 }

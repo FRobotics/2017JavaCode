@@ -33,4 +33,11 @@ public class CommandGroup extends Command {
         }
         return allFinished;
     }
+
+	@Override
+	public void init() {
+		for(Command command : commands) {
+			command.init();
+		}
+	}
 }
