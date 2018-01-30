@@ -20,14 +20,14 @@ public class DoubleSolenoidSystem extends SubsystemBase {
             return value;
         }
 
-        public Value getOpposite() {
+        public Direction getOpposite() {
             switch (value) {
                 case kForward:
-                    return Value.kReverse;
+                    return REVERSE;
                 case kReverse:
-                    return Value.kForward;
+                    return FORWARD;
 			default:
-				return Value.kOff;
+				return OFF;
             }
         }
     }

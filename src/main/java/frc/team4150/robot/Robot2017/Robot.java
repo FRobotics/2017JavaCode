@@ -1,6 +1,7 @@
 package main.java.frc.team4150.robot.Robot2017;
 
 import main.java.frc.team4150.robot.command.drive.DriveStraightCommand;
+import main.java.frc.team4150.robot.command.drive.TurnCommand;
 import main.java.frc.team4150.robot.input.joystick.Button;
 import main.java.frc.team4150.robot.input.joystick.ControllerInput;
 import main.java.frc.team4150.robot.subsystem.DoubleSolenoidSystem;
@@ -11,7 +12,7 @@ import main.java.frc.team4150.robot.util.Distance;
 import main.java.frc.team4150.robot.util.Time;
 
 public class Robot extends main.java.frc.team4150.robot.RobotBase {
-	
+
 	public static final Distance WHEEL_RADIUS = new Distance(3, Distance.Unit.INCHES);
 
 	public Robot() {
@@ -26,8 +27,8 @@ public class Robot extends main.java.frc.team4150.robot.RobotBase {
 	@Override
 	public void addCommands() {
 		DriveSystem drive = (DriveSystem) Subsystem.DRIVE.getSubsystem();
-		this.addCommand(
-				new DriveStraightCommand(drive, new Distance(10, Distance.Unit.INCHES), new Time(1, Time.Unit.SEC)));
+		this.addCommand(new DriveStraightCommand(drive, new Distance(30, Distance.Unit.INCHES), new Time(1, Time.Unit.SEC)));
+		this.addCommand(new TurnCommand(drive, new Distance(30, Distance.Unit.INCHES), new Time(1, Time.Unit.SEC)));
 	}
 
 	@Override
@@ -51,9 +52,6 @@ public class Robot extends main.java.frc.team4150.robot.RobotBase {
 		SparkSystem climbMotor = (SparkSystem) Subsystem.CLIMB_MOTOR.getSubsystem();
 
 		drive.customDrive(controller);
-
-		System.out.println("d:" + left.getDistance().to(Distance.Unit.INCHES) + "/" + right.getDistance().to(Distance.Unit.INCHES));
-		System.out.println("c:" + left.getCount() + "/" + right.getCount());
 
 		// TODO: turn these into commands (don't use these)
 

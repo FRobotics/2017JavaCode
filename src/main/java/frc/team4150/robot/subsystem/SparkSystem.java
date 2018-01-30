@@ -6,6 +6,7 @@ import main.java.frc.team4150.robot.subsystem.base.SubsystemBase;
 public class SparkSystem extends SubsystemBase {
 
     private Spark spark;
+    private double speed;
 
     public SparkSystem(int channel){
         spark = new Spark(channel);
@@ -21,11 +22,25 @@ public class SparkSystem extends SubsystemBase {
      * @param speed
      */
     public void setSpeed(double speed){
-        spark.setSpeed(speed);
+        this.speed = speed;
     }
+    
+    /**
+     * Sets the speed of the spark motor to 0
+     */
+    public void stop() {
+		this.speed = 0;
+	}
+	
+    /**
+     * Reverses the speed of the spark motor
+     */
+	public void reverse() {
+		this.speed *= -1;
+	}
 
 	@Override
 	public void periodic() {
-		
+		spark.setSpeed(speed);
 	}
 }
