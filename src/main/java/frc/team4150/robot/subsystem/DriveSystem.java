@@ -126,8 +126,6 @@ public class DriveSystem extends SubsystemBase {
 			left /= 2;
 		}
 
-		System.out.println("o:"+left + "/" + right);
-
 		leftMotorSpeed = left;
 		rightMotorSpeed = right;
 

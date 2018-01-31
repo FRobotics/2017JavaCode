@@ -1,10 +1,12 @@
 package main.java.frc.team4150.robot.Robot2017;
 
+import main.java.frc.team4150.robot.command.SetSolenoidCommand;
 import main.java.frc.team4150.robot.command.drive.DriveStraightCommand;
 import main.java.frc.team4150.robot.command.drive.TurnCommand;
 import main.java.frc.team4150.robot.input.joystick.Button;
 import main.java.frc.team4150.robot.input.joystick.ControllerInput;
 import main.java.frc.team4150.robot.subsystem.DoubleSolenoidSystem;
+import main.java.frc.team4150.robot.subsystem.DoubleSolenoidSystem.Direction;
 import main.java.frc.team4150.robot.subsystem.DriveSystem;
 import main.java.frc.team4150.robot.subsystem.EncoderSystem;
 import main.java.frc.team4150.robot.subsystem.SparkSystem;
@@ -27,8 +29,12 @@ public class Robot extends main.java.frc.team4150.robot.RobotBase {
 	@Override
 	public void addCommands() {
 		DriveSystem drive = (DriveSystem) Subsystem.DRIVE.getSubsystem();
+		DoubleSolenoidSystem gear_platform = (DoubleSolenoidSystem) Subsystem.GEAR_PLATFORM.getSubsystem();
+		DoubleSolenoidSystem gear_arms = (DoubleSolenoidSystem) Subsystem.GEAR_ARMS.getSubsystem();
 		this.addCommand(new DriveStraightCommand(drive, new Distance(30, Distance.Unit.INCHES), new Time(1, Time.Unit.SEC)));
 		this.addCommand(new TurnCommand(drive, new Distance(30, Distance.Unit.INCHES), new Time(1, Time.Unit.SEC)));
+		this.addCommand(new SetSolenoidCommand(gear_platform, Direction.FORWARD, new Time(1, Time.Unit.SEC)));
+		this.addCommand(new SetSolenoidCommand(gear_arms, Direction.FORWARD, new Time(1, Time.Unit.SEC)));
 	}
 
 	@Override
