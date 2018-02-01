@@ -1,5 +1,6 @@
 package main.java.frc.team4150.robot.Robot2017;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import main.java.frc.team4150.robot.command.SetSolenoidCommand;
 import main.java.frc.team4150.robot.command.drive.DriveStraightCommand;
 import main.java.frc.team4150.robot.command.drive.TurnCommand;
@@ -11,6 +12,7 @@ import main.java.frc.team4150.robot.subsystem.DriveSystem;
 import main.java.frc.team4150.robot.subsystem.EncoderSystem;
 import main.java.frc.team4150.robot.subsystem.SparkSystem;
 import main.java.frc.team4150.robot.util.Distance;
+import main.java.frc.team4150.robot.util.Distance.Unit;
 import main.java.frc.team4150.robot.util.Time;
 
 public class Robot extends main.java.frc.team4150.robot.RobotBase {
@@ -49,8 +51,8 @@ public class Robot extends main.java.frc.team4150.robot.RobotBase {
 		ControllerInput controller = (ControllerInput) Input.CONTROLLER_MOVEMENT.getInput();
 		ControllerInput controller2 = (ControllerInput) Input.CONTROLLER_ACTIONS.getInput();
 
-		EncoderSystem left = (EncoderSystem) Subsystem.LEFT_ENCODER.getSubsystem();
-		EncoderSystem right = (EncoderSystem) Subsystem.RIGHT_ENCODER.getSubsystem();
+		EncoderSystem leftEncoder = (EncoderSystem) Subsystem.LEFT_ENCODER.getSubsystem();
+		EncoderSystem rightEncoder = (EncoderSystem) Subsystem.RIGHT_ENCODER.getSubsystem();
 
 		DriveSystem drive = (DriveSystem) Subsystem.DRIVE.getSubsystem();
 		DoubleSolenoidSystem gear_arms = (DoubleSolenoidSystem) Subsystem.GEAR_ARMS.getSubsystem();
@@ -58,6 +60,9 @@ public class Robot extends main.java.frc.team4150.robot.RobotBase {
 		SparkSystem climbMotor = (SparkSystem) Subsystem.CLIMB_MOTOR.getSubsystem();
 
 		drive.customDrive(controller);
+		
+		SmartDashboard.putNumber("leftEncoder", leftEncoder.getDistance().to(Unit.FEET));
+		SmartDashboard.putNumber("rightEncoder", rightEncoder.getDistance().to(Unit.FEET));
 
 		// TODO: turn these into commands (don't use these)
 

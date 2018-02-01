@@ -1,61 +1,28 @@
 package main.java.frc.team4150.robot.subsystem;
 
-import edu.wpi.first.wpilibj.Jaguar;
-import edu.wpi.first.wpilibj.PWMSpeedController;
-import edu.wpi.first.wpilibj.Talon;
-import edu.wpi.first.wpilibj.Victor;
 import main.java.frc.team4150.robot.input.joystick.Axis;
 import main.java.frc.team4150.robot.input.joystick.Button;
 import main.java.frc.team4150.robot.input.joystick.ControllerInput;
 import main.java.frc.team4150.robot.subsystem.base.SubsystemBase;
 import main.java.frc.team4150.robot.util.Distance;
-import main.java.frc.team4150.robot.util.Util;
 
 public class DriveSystem extends SubsystemBase {
-
-	public enum MotorType {
-		VICTOR, TALON, JAGUAR
-	}
-
-	private PWMSpeedController leftMotor;
-	private PWMSpeedController rightMotor;
-
-	private double leftMotorSpeed;
-	private double rightMotorSpeed;
+	
+	private MotorSystem leftMotor;
+	private MotorSystem rightMotor;
 	
 	private Distance wheelRadius;
 
-	public DriveSystem(int leftMotorChannel, int rightMotorChannel, MotorType type, Distance wheelRadius) {
-		switch (type) {
-		case VICTOR:
-			leftMotor = new Victor(leftMotorChannel);
-			rightMotor = new Victor(rightMotorChannel);
-			break;
-		case TALON:
-			leftMotor = new Talon(leftMotorChannel);
-			rightMotor = new Talon(rightMotorChannel);
-			break;
-		case JAGUAR:
-			leftMotor = new Jaguar(leftMotorChannel);
-			rightMotor = new Jaguar(rightMotorChannel);
-			break;
-		default:
-			leftMotor = null;
-			rightMotor = null;
-		}
-
-		leftMotorSpeed = 0;
-		rightMotorSpeed = 0;
-		
+	public DriveSystem(MotorSystem leftMotor, MotorSystem rightMotor, Distance wheelRadius) {
+		this.leftMotor = leftMotor;
+		this.rightMotor = rightMotor;
 		this.wheelRadius = wheelRadius;
 	}
 
 	@Override
 	public void init() {
-		leftMotor.setExpiration(0.1);
-		leftMotor.setSafetyEnabled(true);
-		rightMotor.setExpiration(0.1);
-		rightMotor.setSafetyEnabled(true);
+		this.leftMotor.init();
+		this.rightMotor.init();
 	}
 
 	/**
@@ -65,8 +32,8 @@ public class DriveSystem extends SubsystemBase {
 	 * @param rightMotorSpeed
 	 */
 	public void setSpeed(double leftMotorSpeed, double rightMotorSpeed) {
-		this.leftMotorSpeed = leftMotorSpeed;
-		this.rightMotorSpeed = rightMotorSpeed;
+		this.leftMotor.setSpeed(leftMotorSpeed);
+		this.rightMotor.setSpeed(rightMotorSpeed);
 	}
 
 	/**
@@ -126,15 +93,15 @@ public class DriveSystem extends SubsystemBase {
 			left /= 2;
 		}
 
-		leftMotorSpeed = left;
-		rightMotorSpeed = right;
+		leftMotor.setSpeed(left);
+		rightMotor.setSpeed(right);
 
 	}
 
 	@Override
 	public void periodic() {
-		leftMotor.set(Util.limit(leftMotorSpeed));
-		rightMotor.set(Util.limit(-rightMotorSpeed));
+		leftMotor.periodic();
+		rightMotor.periodic();
 	}
 	
 	public Distance getWheelRadius() {
