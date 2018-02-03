@@ -13,7 +13,7 @@ public enum Subsystem implements SubsystemEnum {
     LEFT_ENCODER(new EncoderSystem(0, 1, Robot.WHEEL_RADIUS)),
     RIGHT_ENCODER(new EncoderSystem(2, 3, Robot.WHEEL_RADIUS, true)),
     COMPRESSOR(new CompressorSystem(0)),
-    CLIMB_BREAK(new DoubleSolenoidSystem(0, 1, DoubleSolenoidSystem.Direction.FORWARD)),
+    CLIMB_BRAKE(new DoubleSolenoidSystem(0, 1, DoubleSolenoidSystem.Direction.FORWARD)),
     GEAR_PLATFORM(new DoubleSolenoidSystem(2, 3, DoubleSolenoidSystem.Direction.REVERSE)),
     GEAR_ARMS(new DoubleSolenoidSystem(4, 5, DoubleSolenoidSystem.Direction.REVERSE)),
     CLIMB_MOTOR(new SparkSystem(2));

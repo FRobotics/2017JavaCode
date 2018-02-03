@@ -30,6 +30,7 @@ public class Robot extends main.java.frc.team4150.robot.RobotBase {
 
 	@Override
 	public void addCommands() {
+		// /!\ 2017 /!\
 		DriveSystem drive = (DriveSystem) Subsystem.DRIVE.getSubsystem();
 		DoubleSolenoidSystem gear_platform = (DoubleSolenoidSystem) Subsystem.GEAR_PLATFORM.getSubsystem();
 		DoubleSolenoidSystem gear_arms = (DoubleSolenoidSystem) Subsystem.GEAR_ARMS.getSubsystem();
@@ -58,9 +59,12 @@ public class Robot extends main.java.frc.team4150.robot.RobotBase {
 		DoubleSolenoidSystem gear_arms = (DoubleSolenoidSystem) Subsystem.GEAR_ARMS.getSubsystem();
 		DoubleSolenoidSystem gear_platform = (DoubleSolenoidSystem) Subsystem.GEAR_PLATFORM.getSubsystem();
 		SparkSystem climbMotor = (SparkSystem) Subsystem.CLIMB_MOTOR.getSubsystem();
+		DoubleSolenoidSystem climbBrake = (DoubleSolenoidSystem) Subsystem.CLIMB_BRAKE.getSubsystem();
 
 		drive.customDrive(controller);
 		
+		SmartDashboard.putNumber("leftMotor", drive.getLeftMotor().getSpeed());
+		SmartDashboard.putNumber("rightMotor", drive.getRightMotor().getSpeed());
 		SmartDashboard.putNumber("leftEncoder", leftEncoder.getDistance().to(Unit.FEET));
 		SmartDashboard.putNumber("rightEncoder", rightEncoder.getDistance().to(Unit.FEET));
 
@@ -72,10 +76,18 @@ public class Robot extends main.java.frc.team4150.robot.RobotBase {
 		if (controller2.buttonPressed(Button.Y))
 			gear_platform.flipDirection();
 
-		if (controller2.buttonDown(Button.B))
-			climbMotor.setSpeed(1.0);
+		if (controller2.buttonDown(Button.START) || controller2.buttonDown(Button.BACK)) {
+			climbBrake.setDirection(Direction.FORWARD);
+		}
 		else
-			climbMotor.setSpeed(0.0);
+			climbBrake.setDirection(Direction.REVERSE); 
+		if(controller2.buttonDown(Button.START) && !controller2.buttonDown(Button.BACK)) {
+			climbMotor.setSpeed(1);
+		}
+		if(controller2.buttonDown(Button.BACK) && !controller2.buttonDown(Button.START)) {
+			climbMotor.setSpeed(-1);
+		}
+			
 
 		// TODO: deal with other subsystems based on input
 	}

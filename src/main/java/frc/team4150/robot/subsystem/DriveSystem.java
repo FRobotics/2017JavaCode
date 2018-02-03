@@ -107,5 +107,13 @@ public class DriveSystem extends SubsystemBase {
 	public Distance getWheelRadius() {
 		return wheelRadius;
 	}
+	
+	public MotorSystem getLeftMotor() {
+		return leftMotor;
+	}
+	
+	public MotorSystem getRightMotor() {
+		return rightMotor;
+	}
 
 }
