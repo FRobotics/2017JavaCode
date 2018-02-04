@@ -62,7 +62,7 @@ public class Robot extends main.java.frc.team4150.robot.RobotBase {
 		DoubleSolenoidSystem climbBrake = (DoubleSolenoidSystem) Subsystem.CLIMB_BRAKE.getSubsystem();
 
 		drive.customDrive(controller);
-		
+
 		SmartDashboard.putNumber("leftMotor", drive.getLeftMotor().getSpeed());
 		SmartDashboard.putNumber("rightMotor", drive.getRightMotor().getSpeed());
 		SmartDashboard.putNumber("leftEncoder", leftEncoder.getDistance().to(Unit.FEET));
@@ -78,16 +78,16 @@ public class Robot extends main.java.frc.team4150.robot.RobotBase {
 
 		if (controller2.buttonDown(Button.START) || controller2.buttonDown(Button.BACK)) {
 			climbBrake.setDirection(Direction.FORWARD);
+		} else {
+			climbBrake.setDirection(Direction.REVERSE);
 		}
-		else
-			climbBrake.setDirection(Direction.REVERSE); 
-		if(controller2.buttonDown(Button.START) && !controller2.buttonDown(Button.BACK)) {
+		
+		if (controller2.buttonDown(Button.START) && !controller2.buttonDown(Button.BACK)) {
 			climbMotor.setSpeed(1);
 		}
-		if(controller2.buttonDown(Button.BACK) && !controller2.buttonDown(Button.START)) {
+		if (controller2.buttonDown(Button.BACK) && !controller2.buttonDown(Button.START)) {
 			climbMotor.setSpeed(-1);
 		}
-			
 
 		// TODO: deal with other subsystems based on input
 	}
