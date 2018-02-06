@@ -4,6 +4,7 @@ import main.java.frc.team4150.robot.input.joystick.Axis;
 import main.java.frc.team4150.robot.input.joystick.Button;
 import main.java.frc.team4150.robot.input.joystick.ControllerInput;
 import main.java.frc.team4150.robot.subsystem.base.SubsystemBase;
+import main.java.frc.team4150.robot.subsystem.motor.MotorSystem;
 import main.java.frc.team4150.robot.util.Distance;
 
 public class DriveSystem extends SubsystemBase {
@@ -11,11 +12,16 @@ public class DriveSystem extends SubsystemBase {
 	private MotorSystem leftMotor;
 	private MotorSystem rightMotor;
 	
+	private EncoderSystem leftEncoder;
+	private EncoderSystem rightEncoder;
+	
 	private Distance wheelRadius;
 
-	public DriveSystem(MotorSystem leftMotor, MotorSystem rightMotor, Distance wheelRadius) {
+	public DriveSystem(MotorSystem leftMotor, MotorSystem rightMotor, EncoderSystem leftEncoder, EncoderSystem rightEncoder, Distance wheelRadius) {
 		this.leftMotor = leftMotor;
 		this.rightMotor = rightMotor;
+		this.leftEncoder = leftEncoder;
+		this.rightEncoder = rightEncoder;
 		this.wheelRadius = wheelRadius;
 	}
 
@@ -114,6 +120,15 @@ public class DriveSystem extends SubsystemBase {
 	
 	public MotorSystem getRightMotor() {
 		return rightMotor;
+	}
+	
+	public void resetEncoders() {
+		this.leftEncoder.resetDistance();
+		this.rightEncoder.resetDistance();
+	}
+	
+	public Distance getDistanceTraveled() {
+		return new Distance((this.rightEncoder.getDistance().toBaseUnit() + this.leftEncoder.getDistance().toBaseUnit()) / 2);
 	}
 
 }

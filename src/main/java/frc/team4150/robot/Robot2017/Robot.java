@@ -8,11 +8,12 @@ import main.java.frc.team4150.robot.input.joystick.Button;
 import main.java.frc.team4150.robot.input.joystick.ControllerInput;
 import main.java.frc.team4150.robot.subsystem.DoubleSolenoidSystem;
 import main.java.frc.team4150.robot.subsystem.DoubleSolenoidSystem.Direction;
+import main.java.frc.team4150.robot.subsystem.motor.SparkSystem;
 import main.java.frc.team4150.robot.subsystem.DriveSystem;
 import main.java.frc.team4150.robot.subsystem.EncoderSystem;
-import main.java.frc.team4150.robot.subsystem.SparkSystem;
 import main.java.frc.team4150.robot.util.Distance;
 import main.java.frc.team4150.robot.util.Distance.Unit;
+import main.java.frc.team4150.robot.util.PositionControl;
 import main.java.frc.team4150.robot.util.Time;
 
 public class Robot extends main.java.frc.team4150.robot.RobotBase {
@@ -90,5 +91,14 @@ public class Robot extends main.java.frc.team4150.robot.RobotBase {
 		}
 
 		// TODO: deal with other subsystems based on input
+	}
+	
+	public PositionControl createDriveControl(Distance distance) {
+		Distance target = new Distance(SmartDashboard.getNumber("drivePosControlTarget", distance.to(Unit.FEET)), Unit.FEET);
+		double minSpeed = SmartDashboard.getNumber("drivePosControlMinSpeed", 0);
+		double maxSpeed = SmartDashboard.getNumber("drivePosControlMaxSpeed", 0);
+		double rate = SmartDashboard.getNumber("drivePosControlRate", 0);
+		double deadband = SmartDashboard.getNumber("drivePosControlDeadband", 0);
+		return new PositionControl(target, minSpeed, maxSpeed, rate, deadband);
 	}
 }

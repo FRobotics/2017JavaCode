@@ -1,4 +1,4 @@
-package main.java.frc.team4150.robot.subsystem;
+package main.java.frc.team4150.robot.subsystem.motor;
 
 import edu.wpi.first.wpilibj.Victor;
 

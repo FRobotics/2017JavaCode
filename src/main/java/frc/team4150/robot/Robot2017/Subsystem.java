@@ -4,9 +4,9 @@ import main.java.frc.team4150.robot.subsystem.CompressorSystem;
 import main.java.frc.team4150.robot.subsystem.DoubleSolenoidSystem;
 import main.java.frc.team4150.robot.subsystem.DriveSystem;
 import main.java.frc.team4150.robot.subsystem.EncoderSystem;
-import main.java.frc.team4150.robot.subsystem.SparkSystem;
-import main.java.frc.team4150.robot.subsystem.VictorSystem;
 import main.java.frc.team4150.robot.subsystem.base.SubsystemEnum;
+import main.java.frc.team4150.robot.subsystem.motor.SparkSystem;
+import main.java.frc.team4150.robot.subsystem.motor.VictorSystem;
 
 public enum Subsystem implements SubsystemEnum {
     DRIVE(new DriveSystem(new VictorSystem(0), new VictorSystem(1), Robot.WHEEL_RADIUS)),

@@ -1,4 +1,4 @@
-package main.java.frc.team4150.robot.subsystem;
+package main.java.frc.team4150.robot.subsystem.motor;
 
 import main.java.frc.team4150.robot.subsystem.base.SubsystemBase;
 import main.java.frc.team4150.robot.util.Util;

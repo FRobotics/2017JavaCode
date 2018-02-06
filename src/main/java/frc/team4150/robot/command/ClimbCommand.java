@@ -4,7 +4,7 @@ import main.java.frc.team4150.robot.RobotBase;
 import main.java.frc.team4150.robot.command.base.Command;
 import main.java.frc.team4150.robot.subsystem.DoubleSolenoidSystem;
 import main.java.frc.team4150.robot.subsystem.DoubleSolenoidSystem.Direction;
-import main.java.frc.team4150.robot.subsystem.MotorSystem;
+import main.java.frc.team4150.robot.subsystem.motor.MotorSystem;
 import main.java.frc.team4150.robot.util.Time;
 import main.java.frc.team4150.robot.util.Time.Unit;
 
