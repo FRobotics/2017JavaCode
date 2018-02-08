@@ -39,7 +39,7 @@ public class DriveSystem extends SubsystemBase {
 	 */
 	public void setSpeed(double leftMotorSpeed, double rightMotorSpeed) {
 		this.leftMotor.setSpeed(leftMotorSpeed);
-		this.rightMotor.setSpeed(rightMotorSpeed);
+		this.rightMotor.setSpeed(-rightMotorSpeed);
 	}
 
 	/**
@@ -47,6 +47,19 @@ public class DriveSystem extends SubsystemBase {
 	 */
 	public void stop() {
 		setSpeed(0, 0);
+	}
+	
+	/**
+	 * Drives the robot how we want it to
+	 * <ul>
+	 * <li>the left stick's Y is forward an backward</li>
+	 * <li>the right stick's X is left and right</li>
+	 * </ul>
+	 * 
+	 * @param controller
+	 */
+	public void customDrive(ControllerInput controller) {
+		customDrive(controller, false);
 	}
 
 	/**
@@ -58,7 +71,7 @@ public class DriveSystem extends SubsystemBase {
 	 * 
 	 * @param controller
 	 */
-	public void customDrive(ControllerInput controller) {
+	public void customDrive(ControllerInput controller, boolean invert) {
 
 		double fb = -controller.getAxis(Axis.LEFT_Y); // inverted so up is forward (positive = forward)
 		double lr = -controller.getAxis(Axis.RIGHT_X); // inverted so left turns left & right turns right
@@ -98,9 +111,13 @@ public class DriveSystem extends SubsystemBase {
 			right /= 2;
 			left /= 2;
 		}
+		
+		if (invert) {
+			left *= -1;
+			right *= -1;
+		}
 
-		leftMotor.setSpeed(left);
-		rightMotor.setSpeed(right);
+		setSpeed(left, right);
 
 	}
 
@@ -120,6 +137,14 @@ public class DriveSystem extends SubsystemBase {
 	
 	public MotorSystem getRightMotor() {
 		return rightMotor;
+	}
+	
+	public EncoderSystem getLeftEncoder() {
+		return leftEncoder;
+	}
+	
+	public EncoderSystem getRightEncoder() {
+		return rightEncoder;
 	}
 	
 	public void resetEncoders() {

@@ -1,24 +1,24 @@
 package main.java.frc.team4150.robot.subsystem.motor;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 public class TalonSRXSystem extends MotorSystem {
 
-	private TalonSRX motor;
+	private WPI_TalonSRX motor;
 	
-	public TalonSRXSystem(int port) {
-		motor = new TalonSRX(port);
+	public TalonSRXSystem(int deviceNumber) {
+		motor = new WPI_TalonSRX(deviceNumber);
 	}
 
 	@Override
 	public void init() {
-		
+		motor.setExpiration(0.1);
+		motor.setSafetyEnabled(true);
 	}
 
 	@Override
 	public void periodic() {
-		motor.set(ControlMode.Current, getSpeed());
+		motor.set(getSpeed());
 	}
 	
 }

@@ -1,4 +1,4 @@
-package main.java.frc.team4150.robot.Robot2017;
+package main.java.frc.team4150.robot.code2017;
 
 import main.java.frc.team4150.robot.subsystem.CompressorSystem;
 import main.java.frc.team4150.robot.subsystem.DoubleSolenoidSystem;
@@ -9,9 +9,9 @@ import main.java.frc.team4150.robot.subsystem.motor.SparkSystem;
 import main.java.frc.team4150.robot.subsystem.motor.VictorSystem;
 
 public enum Subsystem implements SubsystemEnum {
-    DRIVE(new DriveSystem(new VictorSystem(0), new VictorSystem(1), Robot.WHEEL_RADIUS)),
-    LEFT_ENCODER(new EncoderSystem(0, 1, Robot.WHEEL_RADIUS)),
-    RIGHT_ENCODER(new EncoderSystem(2, 3, Robot.WHEEL_RADIUS, true)),
+    DRIVE(new DriveSystem(new VictorSystem(0), new VictorSystem(1),
+    		new EncoderSystem(0, 1, Robot.WHEEL_RADIUS), new EncoderSystem(2, 3, Robot.WHEEL_RADIUS, true),
+    		Robot.WHEEL_RADIUS)),
     COMPRESSOR(new CompressorSystem(0)),
     CLIMB_BRAKE(new DoubleSolenoidSystem(0, 1, DoubleSolenoidSystem.Direction.FORWARD)),
     GEAR_PLATFORM(new DoubleSolenoidSystem(2, 3, DoubleSolenoidSystem.Direction.REVERSE)),

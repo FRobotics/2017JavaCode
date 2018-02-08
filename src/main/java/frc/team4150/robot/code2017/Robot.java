@@ -1,4 +1,4 @@
-package main.java.frc.team4150.robot.Robot2017;
+package main.java.frc.team4150.robot.code2017;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import main.java.frc.team4150.robot.command.SetSolenoidCommand;
@@ -35,8 +35,8 @@ public class Robot extends main.java.frc.team4150.robot.RobotBase {
 		DriveSystem drive = (DriveSystem) Subsystem.DRIVE.getSubsystem();
 		DoubleSolenoidSystem gear_platform = (DoubleSolenoidSystem) Subsystem.GEAR_PLATFORM.getSubsystem();
 		DoubleSolenoidSystem gear_arms = (DoubleSolenoidSystem) Subsystem.GEAR_ARMS.getSubsystem();
-		this.addCommand(new DriveStraightCommand(drive, new Distance(30, Distance.Unit.INCHES), new Time(1, Time.Unit.SEC)));
-		this.addCommand(new TurnCommand(drive, new Distance(30, Distance.Unit.INCHES), new Time(1, Time.Unit.SEC)));
+		this.addCommand(new DriveStraightCommand(drive, new Distance(30, Distance.Unit.INCHES)));
+		this.addCommand(new TurnCommand(drive, new Distance(30, Distance.Unit.INCHES)));
 		this.addCommand(new SetSolenoidCommand(gear_platform, Direction.FORWARD, new Time(1, Time.Unit.SEC)));
 		this.addCommand(new SetSolenoidCommand(gear_arms, Direction.FORWARD, new Time(1, Time.Unit.SEC)));
 	}
@@ -53,10 +53,9 @@ public class Robot extends main.java.frc.team4150.robot.RobotBase {
 		ControllerInput controller = (ControllerInput) Input.CONTROLLER_MOVEMENT.getInput();
 		ControllerInput controller2 = (ControllerInput) Input.CONTROLLER_ACTIONS.getInput();
 
-		EncoderSystem leftEncoder = (EncoderSystem) Subsystem.LEFT_ENCODER.getSubsystem();
-		EncoderSystem rightEncoder = (EncoderSystem) Subsystem.RIGHT_ENCODER.getSubsystem();
-
 		DriveSystem drive = (DriveSystem) Subsystem.DRIVE.getSubsystem();
+		EncoderSystem leftEncoder = drive.getLeftEncoder();
+		EncoderSystem rightEncoder = drive.getRightEncoder();
 		DoubleSolenoidSystem gear_arms = (DoubleSolenoidSystem) Subsystem.GEAR_ARMS.getSubsystem();
 		DoubleSolenoidSystem gear_platform = (DoubleSolenoidSystem) Subsystem.GEAR_PLATFORM.getSubsystem();
 		SparkSystem climbMotor = (SparkSystem) Subsystem.CLIMB_MOTOR.getSubsystem();
