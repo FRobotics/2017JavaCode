@@ -62,11 +62,11 @@ public class Robot extends main.java.frc.team4150.robot.RobotBase {
 	}
 	
 	public PositionControl createDriveControl(Distance distance) {
-		Distance target = new Distance(SmartDashboard.getNumber("drivePosControlTarget", distance.to(Unit.FEET)), Unit.FEET);
-		double minSpeed = SmartDashboard.getNumber("drivePosControlMinSpeed", 0);
-		double maxSpeed = SmartDashboard.getNumber("drivePosControlMaxSpeed", 0);
-		double rate = SmartDashboard.getNumber("drivePosControlRate", 0);
-		double deadband = SmartDashboard.getNumber("drivePosControlDeadband", 0);
+		Distance target = new Distance(SmartDashboard.getNumber("drivePosControl/target", distance.to(Unit.FEET)), Unit.FEET);
+		double minSpeed = SmartDashboard.getNumber("drivePosControl/minSpeed", 0);
+		double maxSpeed = SmartDashboard.getNumber("drivePosControl/maxSpeed", 0);
+		double rate = SmartDashboard.getNumber("drivePosControl/rate", 0);
+		double deadband = SmartDashboard.getNumber("drivePosControl/deadband", 0);
 		return new PositionControl(target, minSpeed, maxSpeed, rate, deadband);
 	}
 }

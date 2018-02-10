@@ -32,10 +32,10 @@ public class PositionControl {
 	 */
 	public PositionControl(Distance target, String key) {
 		this.target = target;
-		this.minSpeed = SmartDashboard.getNumber(key + "PosControlMinSpeed", 0);
-		this.maxSpeed = SmartDashboard.getNumber(key + "PosControlMaxSpeed", 0);
-		this.rate = SmartDashboard.getNumber(key + "PosControlRate", 0);
-		this.deadband = SmartDashboard.getNumber(key + "PosControlDeadband", 0);
+		this.minSpeed = SmartDashboard.getNumber(key + "PosControl/minSpeed", 0);
+		this.maxSpeed = SmartDashboard.getNumber(key + "PosControl/maxSpeed", 0);
+		this.rate = SmartDashboard.getNumber(key + "PosControl/rate", 0);
+		this.deadband = SmartDashboard.getNumber(key + "PosControl/deadband", 0);
 	}
 	
 	public double getSpeed(Distance distanceTraveled, Distance radius) {
