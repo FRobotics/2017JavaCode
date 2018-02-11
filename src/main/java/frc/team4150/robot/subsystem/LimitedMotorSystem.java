@@ -23,9 +23,11 @@ public class LimitedMotorSystem extends MotorSystem {
 	@Override
 	public void periodic() {
 		this.motor.periodic();
-		if (forwardLimit.get()) {
+		this.forwardLimit.periodic();
+		this.reverseLimit.periodic();
+		if (forwardLimit.triggered()) {
 			if(motor.getSpeed() > 0) motor.stop();
-		} else if (reverseLimit.get()) {
+		} else if (reverseLimit.triggered()) {
 			if(motor.getSpeed() < 0) motor.stop();
 		}
 	}
