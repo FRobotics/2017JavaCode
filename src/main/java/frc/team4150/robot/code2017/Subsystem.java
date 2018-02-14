@@ -2,11 +2,11 @@ package main.java.frc.team4150.robot.code2017;
 
 import main.java.frc.team4150.robot.subsystem.CompressorSystem;
 import main.java.frc.team4150.robot.subsystem.DoubleSolenoidSystem;
-import main.java.frc.team4150.robot.subsystem.DriveSystem;
-import main.java.frc.team4150.robot.subsystem.EncoderSystem;
 import main.java.frc.team4150.robot.subsystem.base.SubsystemEnum;
-import main.java.frc.team4150.robot.subsystem.motor.SparkSystem;
-import main.java.frc.team4150.robot.subsystem.motor.VictorSystem;
+import main.java.frc.team4150.robot.subsystem.drive.DriveSystem;
+import main.java.frc.team4150.robot.subsystem.drive.EncoderSystem;
+import main.java.frc.team4150.robot.subsystem.motor.types.SparkSystem;
+import main.java.frc.team4150.robot.subsystem.motor.types.VictorSystem;
 
 public enum Subsystem implements SubsystemEnum {
     DRIVE(new DriveSystem(new VictorSystem(0), new VictorSystem(1),

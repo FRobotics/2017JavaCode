@@ -1,6 +1,8 @@
-package main.java.frc.team4150.robot.subsystem.motor;
+package main.java.frc.team4150.robot.subsystem.motor.types;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
+import main.java.frc.team4150.robot.subsystem.motor.MotorSystem;
 
 public class TalonSRXSystem extends MotorSystem {
 

@@ -5,7 +5,7 @@ import main.java.frc.team4150.robot.util.Util;
 
 public abstract class MotorSystem extends SubsystemBase {
 
-	public double speed;
+	private double speed;
 	
 	public void setSpeed(double speed) {
 		this.speed = Util.limit(speed);

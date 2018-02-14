@@ -1,20 +1,22 @@
 package main.java.frc.team4150.robot.code2018;
 
 import main.java.frc.team4150.robot.subsystem.DoubleSolenoidSystem;
-import main.java.frc.team4150.robot.subsystem.EncoderSystem;
-import main.java.frc.team4150.robot.subsystem.LimitedMotorSystem;
-import main.java.frc.team4150.robot.subsystem.QuadDriveSystem;
-import main.java.frc.team4150.robot.subsystem.ShifterSystem;
+import main.java.frc.team4150.robot.subsystem.DoubleSolenoidSystem.Direction;
 import main.java.frc.team4150.robot.subsystem.base.SubsystemBase;
 import main.java.frc.team4150.robot.subsystem.base.SubsystemEnum;
-import main.java.frc.team4150.robot.subsystem.motor.TalonSRXSystem;
+import main.java.frc.team4150.robot.subsystem.drive.EncoderSystem;
+import main.java.frc.team4150.robot.subsystem.drive.QuadDriveSystem;
+import main.java.frc.team4150.robot.subsystem.drive.ShifterSystem;
+import main.java.frc.team4150.robot.subsystem.motor.LimitedMotorSystem;
+import main.java.frc.team4150.robot.subsystem.motor.types.TalonSRXSystem;
 
 public enum Subsystem implements SubsystemEnum {
     DRIVE(new QuadDriveSystem(new TalonSRXSystem(10), new TalonSRXSystem(11), new TalonSRXSystem(12), new TalonSRXSystem(13),
     		new EncoderSystem(0, 1, Robot.WHEEL_RADIUS), new EncoderSystem(2, 3, Robot.WHEEL_RADIUS, true),
     		Robot.WHEEL_RADIUS)),
-    SHIFTER(new ShifterSystem(0, 1, DoubleSolenoidSystem.Direction.FORWARD, DoubleSolenoidSystem.Direction.REVERSE)),
-    ELEVATOR(new LimitedMotorSystem(new TalonSRXSystem(14), 1, 1)) //TODO: make the ports correct
+    SHIFTER(new ShifterSystem(0, 1, Direction.FORWARD, Direction.REVERSE)),
+    ELEVATOR(new LimitedMotorSystem(new TalonSRXSystem(14), 6, 5)), //TODO: make the ports correct
+    ARM(new DoubleSolenoidSystem(3, 4, Direction.FORWARD))
     ;
 
     private SubsystemBase subsystem;

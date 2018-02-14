@@ -1,6 +1,6 @@
-package main.java.frc.team4150.robot.subsystem;
+package main.java.frc.team4150.robot.subsystem.motor;
 
-import main.java.frc.team4150.robot.subsystem.motor.MotorSystem;
+import main.java.frc.team4150.robot.subsystem.DigitalInputSystem;
 
 public class LimitedMotorSystem extends MotorSystem {
 	
