@@ -43,5 +43,9 @@ public class Distance {
 	public double toDegrees(Distance radius) {
 		return this.inches / inchPerDegree / radius.to(Unit.INCHES);
 	}
+	
+	public static Distance fromDegrees(double degrees, Distance radius) {
+		return new Distance(degrees * inchPerDegree * radius.to(Unit.INCHES));
+	}
 
 }

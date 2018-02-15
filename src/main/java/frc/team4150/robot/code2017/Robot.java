@@ -1,7 +1,7 @@
 package main.java.frc.team4150.robot.code2017;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import main.java.frc.team4150.robot.command.SetSolenoidCommand;
+import main.java.frc.team4150.robot.command.SetDoubleSolenoidCommand;
 import main.java.frc.team4150.robot.command.drive.DriveStraightCommand;
 import main.java.frc.team4150.robot.command.drive.TurnCommand;
 import main.java.frc.team4150.robot.input.joystick.Button;
@@ -13,7 +13,6 @@ import main.java.frc.team4150.robot.subsystem.drive.EncoderSystem;
 import main.java.frc.team4150.robot.subsystem.motor.types.SparkSystem;
 import main.java.frc.team4150.robot.util.Distance;
 import main.java.frc.team4150.robot.util.Distance.Unit;
-import main.java.frc.team4150.robot.util.PositionControl;
 import main.java.frc.team4150.robot.util.Time;
 
 public class Robot extends main.java.frc.team4150.robot.RobotBase {
@@ -36,9 +35,9 @@ public class Robot extends main.java.frc.team4150.robot.RobotBase {
 		DoubleSolenoidSystem gear_platform = (DoubleSolenoidSystem) Subsystem.GEAR_PLATFORM.getSubsystem();
 		DoubleSolenoidSystem gear_arms = (DoubleSolenoidSystem) Subsystem.GEAR_ARMS.getSubsystem();
 		this.addCommand(new DriveStraightCommand(drive, new Distance(30, Distance.Unit.INCHES)));
-		this.addCommand(new TurnCommand(drive, new Distance(30, Distance.Unit.INCHES)));
-		this.addCommand(new SetSolenoidCommand(gear_platform, Direction.FORWARD, new Time(1, Time.Unit.SEC)));
-		this.addCommand(new SetSolenoidCommand(gear_arms, Direction.FORWARD, new Time(1, Time.Unit.SEC)));
+		this.addCommand(new TurnCommand(drive, new Distance(30, Distance.Unit.INCHES), false));
+		this.addCommand(new SetDoubleSolenoidCommand(gear_platform, Direction.FORWARD, new Time(1, Time.Unit.SEC)));
+		this.addCommand(new SetDoubleSolenoidCommand(gear_arms, Direction.FORWARD, new Time(1, Time.Unit.SEC)));
 	}
 
 	@Override
@@ -90,14 +89,5 @@ public class Robot extends main.java.frc.team4150.robot.RobotBase {
 		}
 
 		// TODO: deal with other subsystems based on input
-	}
-	
-	public PositionControl createDriveControl(Distance distance) {
-		Distance target = new Distance(SmartDashboard.getNumber("drivePosControlTarget", distance.to(Unit.FEET)), Unit.FEET);
-		double minSpeed = SmartDashboard.getNumber("drivePosControlMinSpeed", 0);
-		double maxSpeed = SmartDashboard.getNumber("drivePosControlMaxSpeed", 0);
-		double rate = SmartDashboard.getNumber("drivePosControlRate", 0);
-		double deadband = SmartDashboard.getNumber("drivePosControlDeadband", 0);
-		return new PositionControl(target, minSpeed, maxSpeed, rate, deadband);
 	}
 }
