@@ -1,8 +1,9 @@
 package main.java.frc.team4150.robot.subsystem.motor;
 
 import main.java.frc.team4150.robot.subsystem.DigitalInputSystem;
+import main.java.frc.team4150.robot.subsystem.base.SubsystemBase;
 
-public class LimitedMotorSystem extends MotorSystem {
+public class LimitedMotorSystem extends SubsystemBase {
 	
 	private MotorSystem motor;
 	private DigitalInputSystem forwardLimit, reverseLimit;
@@ -26,10 +27,22 @@ public class LimitedMotorSystem extends MotorSystem {
 		this.forwardLimit.periodic();
 		this.reverseLimit.periodic();
 		if (forwardLimit.triggered()) {
-			if(motor.getSpeed() > 0) motor.stop();
+			if(motor.getSpeed() > 0) {
+				motor.stop();
+				System.out.println("stopped from positive!");
+			}
 		} else if (reverseLimit.triggered()) {
 			if(motor.getSpeed() < 0) motor.stop();
 		}
+	}
+	
+	public void setSpeed(double speed) {
+		motor.setSpeed(speed);
+		this.periodic();
+	}
+	
+	public void stop() {
+		setSpeed(0);
 	}
 	
 	public MotorSystem getMotor() {

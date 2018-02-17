@@ -16,7 +16,8 @@ public enum Subsystem implements SubsystemEnum {
     		Robot.WHEEL_RADIUS)),
     SHIFTER(new ShifterSystem(0, 1, Direction.FORWARD, Direction.REVERSE)),
     ELEVATOR(new LimitedMotorSystem(new TalonSRXSystem(14), 6, 5)), //TODO: make the ports correct
-    ARM(new DoubleSolenoidSystem(3, 4, Direction.FORWARD))
+    ARM(new DoubleSolenoidSystem(4, 5, Direction.FORWARD)),
+    ELEVATOR_BRAKE(new DoubleSolenoidSystem(2, 3, Direction.REVERSE))
     ;
 
     private SubsystemBase subsystem;
