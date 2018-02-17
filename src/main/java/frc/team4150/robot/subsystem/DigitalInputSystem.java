@@ -7,7 +7,6 @@ public class DigitalInputSystem extends SubsystemBase {
 	
 	private DigitalInput input;
 	private boolean triggered;
-	private boolean pulsing;
 	private boolean inverted;
 	
 	public DigitalInputSystem(int port) {
@@ -17,7 +16,6 @@ public class DigitalInputSystem extends SubsystemBase {
 	public DigitalInputSystem(int port, boolean inverted) {
 		this.input = new DigitalInput(port);
 		this.triggered = false;
-		this.pulsing = false;
 		this.inverted = inverted;
 	}
 
@@ -25,20 +23,9 @@ public class DigitalInputSystem extends SubsystemBase {
 	public void init() {
 		
 	}
-
-	@Override
-	public void periodic() {
-		if(this.get()) {
-			if(!pulsing) triggered = !triggered;
-			pulsing = true;
-		}else {
-			pulsing = false;
-		}
-	}
 	
 	public boolean get() {
-		boolean input = this.input.get();
-		return inverted ? input : !input;
+		return triggered;
 	}
 	
 	public boolean triggered() {
@@ -47,6 +34,13 @@ public class DigitalInputSystem extends SubsystemBase {
 	
 	public void reset() {
 		this.triggered = false;
+	}
+
+	@Override
+	public void periodic() {
+		boolean rawInput = this.input.get();
+		boolean input = inverted ? rawInput : !rawInput;
+		if(input) triggered = true;
 	}
 	
 }

@@ -1,5 +1,6 @@
 package main.java.frc.team4150.robot.subsystem.motor;
 
+import main.java.frc.team4150.robot.subsystem.CounterSystem;
 import main.java.frc.team4150.robot.subsystem.DigitalInputSystem;
 import main.java.frc.team4150.robot.subsystem.base.SubsystemBase;
 
@@ -7,11 +8,13 @@ public class LimitedMotorSystem extends SubsystemBase {
 	
 	private MotorSystem motor;
 	private DigitalInputSystem forwardLimit, reverseLimit;
+	private CounterSystem counter;
 	
-	public LimitedMotorSystem(MotorSystem motor, int forwardLimitPort, int reverseLimitPort) {
+	public LimitedMotorSystem(MotorSystem motor, int forwardLimitPort, int reverseLimitPort, int counterPort) {
 		this.motor = motor;
 		forwardLimit = new DigitalInputSystem(forwardLimitPort);
 		reverseLimit = new DigitalInputSystem(reverseLimitPort);
+		counter = new CounterSystem(counterPort);
 	}
 
 	@Override
@@ -19,20 +22,30 @@ public class LimitedMotorSystem extends SubsystemBase {
 		motor.init();
 		forwardLimit.init();
 		reverseLimit.init();
+		counter.init();
 	}
 
 	@Override
 	public void periodic() {
-		this.motor.periodic();
-		this.forwardLimit.periodic();
-		this.reverseLimit.periodic();
-		if (forwardLimit.triggered()) {
-			if(motor.getSpeed() > 0) {
-				motor.stop();
-				System.out.println("stopped from positive!");
+		motor.periodic();
+		forwardLimit.periodic();
+		reverseLimit.periodic();
+		counter.periodic();
+		if(forwardLimit.triggered() || reverseLimit.triggered()) {
+			if(counter.get() > 2000) {
+				counter.reset();
+				forwardLimit.reset();
+				reverseLimit.reset();
 			}
-		} else if (reverseLimit.triggered()) {
-			if(motor.getSpeed() < 0) motor.stop();
+			if (forwardLimit.triggered()) {
+				if(motor.getSpeed() > 0) {
+					motor.stop();
+				}
+			} else if (reverseLimit.triggered()) {
+				if(motor.getSpeed() < 0) motor.stop();
+			}
+		} else {
+			counter.reset();
 		}
 	}
 	
