@@ -12,7 +12,10 @@ public class DriveStraightCommand extends DriveCommand {
 
 	@Override
 	public boolean periodic(RobotBase robot) {
-		if(isFinished()) return true;
+		if(isFinished()) {
+			getDriveSystem().setSpeed(0, 0);
+			return true;
+		}
 		getDriveSystem().setSpeed(getSpeed(), getSpeed());
 		return false;
 	}

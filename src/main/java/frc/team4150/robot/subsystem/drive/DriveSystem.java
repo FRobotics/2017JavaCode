@@ -8,16 +8,17 @@ import main.java.frc.team4150.robot.subsystem.motor.MotorSystem;
 import main.java.frc.team4150.robot.util.Distance;
 
 public class DriveSystem extends SubsystemBase {
-	
+
 	private MotorSystem leftMotor;
 	private MotorSystem rightMotor;
-	
+
 	private EncoderSystem leftEncoder;
 	private EncoderSystem rightEncoder;
-	
+
 	private Distance wheelRadius;
 
-	public DriveSystem(MotorSystem leftMotor, MotorSystem rightMotor, EncoderSystem leftEncoder, EncoderSystem rightEncoder, Distance wheelRadius) {
+	public DriveSystem(MotorSystem leftMotor, MotorSystem rightMotor, EncoderSystem leftEncoder,
+			EncoderSystem rightEncoder, Distance wheelRadius) {
 		this.leftMotor = leftMotor;
 		this.rightMotor = rightMotor;
 		this.leftEncoder = leftEncoder;
@@ -48,7 +49,7 @@ public class DriveSystem extends SubsystemBase {
 	public void stop() {
 		setSpeed(0, 0);
 	}
-	
+
 	/**
 	 * Drives the robot how we want it to
 	 * <ul>
@@ -73,13 +74,8 @@ public class DriveSystem extends SubsystemBase {
 	 */
 	public void customDrive(ControllerInput controller, boolean invert) {
 
-		double fb = -controller.getAxis(Axis.LEFT_Y); // inverted so up is forward (positive = forward)
-		double lr = -controller.getAxis(Axis.RIGHT_X); // inverted so left turns left & right turns right
-
-		if (Math.abs(fb) < 0.2)
-			fb = 0;
-		if (Math.abs(lr) < 0.2)
-			lr = 0;
+		double fb = smooth(controller.getAxis(Axis.LEFT_Y), 0.2, 2); // inverted so up is forward (positive = forward)
+		double lr = smooth(controller.getAxis(Axis.RIGHT_X), 0.2, 3); // inverted so left turns left & right turns right
 
 		// start out with just forward and backward
 		double left, right;
@@ -104,14 +100,16 @@ public class DriveSystem extends SubsystemBase {
 					right = -Math.max(-fb, -lr);
 				}
 			}
+			left *= 0.75;
+			right *= 0.75;
 		}
 
 		// apply slow mode
 		if (controller.buttonDown(Button.RIGHT_BUMPER)) {
-			right /= 2;
-			left /= 2;
+			right *= 0.5;
+			left *= 0.5;
 		}
-		
+
 		if (invert) {
 			left *= -1;
 			right *= -1;
@@ -121,39 +119,60 @@ public class DriveSystem extends SubsystemBase {
 
 	}
 
+	public static double smooth(double value, double deadband, double power) {
+		if (value > deadband) {
+			double newValue = (value - deadband) / (1 - deadband);
+			return pow(newValue, power);
+		}
+		if (value < -deadband) {
+			double newValue = (value + deadband) / (1 - deadband);
+			return -Math.abs(pow(newValue, power));
+		}
+		return 0;
+	}
+	
+	public static double pow(double value, double power) {
+		double newValue = 1;
+		for(int i = 0; i < power; i++) {
+			newValue *= value;
+		}
+		return newValue;
+	}
+
 	@Override
 	public void periodic() {
 		leftMotor.periodic();
 		rightMotor.periodic();
 	}
-	
+
 	public Distance getWheelRadius() {
 		return wheelRadius;
 	}
-	
+
 	public MotorSystem getLeftMotor() {
 		return leftMotor;
 	}
-	
+
 	public MotorSystem getRightMotor() {
 		return rightMotor;
 	}
-	
+
 	public EncoderSystem getLeftEncoder() {
 		return leftEncoder;
 	}
-	
+
 	public EncoderSystem getRightEncoder() {
 		return rightEncoder;
 	}
-	
+
 	public void resetEncoders() {
 		this.leftEncoder.resetDistance();
 		this.rightEncoder.resetDistance();
 	}
-	
+
 	public Distance getDistanceTraveled() {
-		return new Distance((this.rightEncoder.getDistance().toBaseUnit() + this.leftEncoder.getDistance().toBaseUnit()) / 2);
+		return new Distance((this.rightEncoder.getDistance().toBaseUnit() + this.leftEncoder.getDistance().toBaseUnit())
+				/ 2);
 	}
 
 }

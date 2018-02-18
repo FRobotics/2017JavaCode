@@ -22,11 +22,5 @@ public abstract class MotorSystem extends SubsystemBase {
 	public void reverse() {
 		speed *= -1;
 	}
-	
-	@Override
-	public abstract void init();
-
-	@Override
-	public abstract void periodic();
 
 }

@@ -30,9 +30,11 @@ public class LimitedMotorSystem extends SubsystemBase {
 		motor.periodic();
 		forwardLimit.periodic();
 		reverseLimit.periodic();
-		counter.periodic();
-		if(forwardLimit.triggered() || reverseLimit.triggered()) {
-			if(counter.get() > 2000) {
+		counter.update(motor.getSpeed() > 0);
+		//if(counter.get() < -24 && motor.getSpeed() < 0) motor.stop();
+		//System.out.println(counter.get());
+		/*if(forwardLimit.triggered() || reverseLimit.triggered()) {
+			if(counter.get() > 24) {
 				counter.reset();
 				forwardLimit.reset();
 				reverseLimit.reset();
@@ -46,7 +48,7 @@ public class LimitedMotorSystem extends SubsystemBase {
 			}
 		} else {
 			counter.reset();
-		}
+		}*/
 	}
 	
 	public void setSpeed(double speed) {

@@ -1,6 +1,7 @@
 package main.java.frc.team4150.robot.util;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import main.java.frc.team4150.robot.util.Distance.Unit;
 
 public class PositionControl {
 
@@ -22,13 +23,13 @@ public class PositionControl {
 	 * @param rate
 	 *            - the rate at which the speed should increase
 	 */
-	public PositionControl(Distance target, double minSpeed, double maxSpeed, double rate, double deadband,
+	public PositionControl(Distance target, double minSpeed, double maxSpeed, double rate, Distance deadband,
 			Distance wheelRadius) {
 		this.target = target;
 		this.minSpeed = minSpeed;
 		this.maxSpeed = maxSpeed;
 		this.rate = rate;
-		this.deadband = deadband;
+		this.deadband = deadband.toBaseUnit();
 
 		this.wheelRadius = wheelRadius;
 	}
@@ -44,16 +45,16 @@ public class PositionControl {
 	 *            - the rate at which the speed should increase
 	 */
 	public PositionControl(Distance target, String key, Distance wheelRadius) {
-		this(	target, SmartDashboard.getNumber(key + "PosControl/minSpeed", 0),
-				SmartDashboard.getNumber(key + "PosControl/maxSpeed", 0),
-				SmartDashboard.getNumber(key + "PosControl/rate", 0),
-				SmartDashboard.getNumber(key + "PosControl/deadband", 0), wheelRadius);
+		this(	target, SmartDashboard.getNumber(key + "PosControl/minSpeed", 0.2),
+				SmartDashboard.getNumber(key + "PosControl/maxSpeed", 0.5),
+				SmartDashboard.getNumber(key + "PosControl/rate", 0.1),
+				new Distance(SmartDashboard.getNumber(key + "PosControl/deadband", 0.5), Unit.FEET), wheelRadius);
 	}
 
 	public boolean onTarget(Distance distanceTraveled) {
-		double target = this.target.toDegrees(wheelRadius);
-		double traveled = distanceTraveled.toDegrees(wheelRadius);
-		if (Math.abs(target - traveled) < deadband) {
+		double target = this.target.toBaseUnit();
+		double traveled = distanceTraveled.toBaseUnit();
+		if (Math.abs(target - traveled) > deadband) {
 			return false;
 		} else {
 			return true;

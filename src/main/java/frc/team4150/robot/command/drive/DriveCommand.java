@@ -28,5 +28,7 @@ public abstract class DriveCommand extends Command {
 	}
 	
 	@Override
-	public void init() {}
+	public void init() {
+		driveSystem.resetEncoders();
+	}
 }

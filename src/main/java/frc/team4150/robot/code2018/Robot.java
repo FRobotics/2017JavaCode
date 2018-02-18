@@ -2,27 +2,19 @@ package main.java.frc.team4150.robot.code2018;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import main.java.frc.team4150.robot.RobotBase;
-import main.java.frc.team4150.robot.command.SetSolenoidCommand;
-import main.java.frc.team4150.robot.command.drive.DriveStraightCommand;
-import main.java.frc.team4150.robot.command.drive.TurnCommand;
-import main.java.frc.team4150.robot.input.joystick.Axis;
 import main.java.frc.team4150.robot.input.joystick.Button;
 import main.java.frc.team4150.robot.input.joystick.ControllerInput;
 import main.java.frc.team4150.robot.subsystem.DoubleSolenoidSystem;
 import main.java.frc.team4150.robot.subsystem.DoubleSolenoidSystem.Direction;
-import main.java.frc.team4150.robot.subsystem.SolenoidSystem;
-import main.java.frc.team4150.robot.subsystem.drive.DriveSystem;
 import main.java.frc.team4150.robot.subsystem.drive.EncoderSystem;
 import main.java.frc.team4150.robot.subsystem.drive.QuadDriveSystem;
 import main.java.frc.team4150.robot.subsystem.drive.ShifterSystem;
 import main.java.frc.team4150.robot.subsystem.motor.LimitedMotorSystem;
 import main.java.frc.team4150.robot.util.Distance;
 import main.java.frc.team4150.robot.util.Distance.Unit;
-import main.java.frc.team4150.robot.util.Time;
 
 public class Robot extends RobotBase {
 
-	public static boolean tankDrive = false;
 	public static final Distance WHEEL_RADIUS = new Distance(3, Distance.Unit.INCHES);
 
 	public Robot() {
@@ -36,8 +28,8 @@ public class Robot extends RobotBase {
 
 	@Override
 	public void addCommands() {
-
-		DriveSystem drive = (DriveSystem) Subsystem.DRIVE.getSubsystem();
+		//DriveSystem drive = (DriveSystem) Subsystem.DRIVE.getSubsystem();
+		/*
 		SolenoidSystem arm = (SolenoidSystem) Subsystem.ARM.getSubsystem();
 
 		String[] commandStrings = SmartDashboard.getStringArray("commands", new String[] {});
@@ -66,7 +58,7 @@ public class Robot extends RobotBase {
 					break;
 				}
 			}
-		}
+		}*/
 	}
 
 	@Override
@@ -89,21 +81,8 @@ public class Robot extends RobotBase {
 		DoubleSolenoidSystem elevatorBrake = (DoubleSolenoidSystem) Subsystem.ELEVATOR_BRAKE.getSubsystem();
 		DoubleSolenoidSystem arm = (DoubleSolenoidSystem) Subsystem.ARM.getSubsystem();
 
-		if(controller.buttonPressed(Button.RIGHT_BUMPER)) {
-			tankDrive = !tankDrive;
-		}
-		
-		if(tankDrive) {
-			double leftSpeed = controller.getAxis(Axis.LEFT_Y);
-			double rightSpeed = controller.getAxis(Axis.RIGHT_Y);
-			drive.getLeftMotor().setSpeed(leftSpeed);
-			drive.getLeftMotor2().setSpeed(leftSpeed);
-			drive.getRightMotor().setSpeed(rightSpeed);
-			drive.getRightMotor2().setSpeed(rightSpeed);
-		}else {
-			drive.customDrive(controller, true);
-		}
-		
+		drive.customDrive(controller, false);
+
 		if (controller.buttonPressed(Button.A)) {
 			shifter.setShift(true);
 		} else if (controller.buttonPressed(Button.B)) {
@@ -111,10 +90,9 @@ public class Robot extends RobotBase {
 		}
 
 		if (controller2.buttonDown(Button.START)) {
-			System.out.println("start");
-			elevator.setSpeed(0.5);
+			elevator.setSpeed(0.75);
 		} else if (controller2.buttonDown(Button.BACK)) {
-			elevator.setSpeed(-0.5);
+			elevator.setSpeed(-1.0);
 		} else {
 			elevator.stop();
 		}

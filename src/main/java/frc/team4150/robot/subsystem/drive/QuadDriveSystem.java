@@ -24,6 +24,13 @@ public class QuadDriveSystem extends DriveSystem {
 	}
 	
 	@Override
+	public void init() {
+		super.init();
+		rightMotor2.init();
+		leftMotor2.init();
+	}
+	
+	@Override
 	public void periodic() {
 		super.periodic();
 		leftMotor2.periodic();

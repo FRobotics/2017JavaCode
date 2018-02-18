@@ -14,6 +14,7 @@ public class EncoderSystem extends SubsystemBase {
 	public EncoderSystem(int port1, int port2, Distance radius, boolean invert) {
 		encoder = new Encoder(port1, port2, invert, Encoder.EncodingType.k4X);
 		encoder.setDistancePerPulse(radius.to(Distance.Unit.INCHES) * Distance.inchPerDegree);
+		previousDistances = new ArrayList<Distance>();
 	}
 	
 	public EncoderSystem(int port1, int port2, Distance radius) {
