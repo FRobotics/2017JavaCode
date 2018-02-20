@@ -4,17 +4,15 @@ import main.java.frc.team4150.robot.RobotBase;
 import main.java.frc.team4150.robot.command.base.Command;
 import main.java.frc.team4150.robot.subsystem.DoubleSolenoidSystem;
 import main.java.frc.team4150.robot.subsystem.DoubleSolenoidSystem.Direction;
-import main.java.frc.team4150.robot.util.Time;
-import main.java.frc.team4150.robot.util.Time.Unit;
 
 public class SetDoubleSolenoidCommand extends Command {
 	
 	private long startTime;
-	private Time wait;
+	private long wait;
 	private DoubleSolenoidSystem solenoid;
 	private Direction direction;
 	
-	public SetDoubleSolenoidCommand (DoubleSolenoidSystem solenoid, Direction direction, Time wait) {
+	public SetDoubleSolenoidCommand (DoubleSolenoidSystem solenoid, Direction direction, long wait) {
 		this.solenoid = solenoid;
 		this.direction = direction;
 		this.wait = wait;
@@ -28,7 +26,7 @@ public class SetDoubleSolenoidCommand extends Command {
 
 	@Override
 	public boolean periodic(RobotBase robot) {
-		if (System.currentTimeMillis() - startTime > wait.to(Unit.MILLIS)) {
+		if (System.currentTimeMillis() - startTime > wait) {
 			return true;
 		}
 		return false;

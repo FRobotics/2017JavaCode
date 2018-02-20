@@ -5,16 +5,14 @@ import main.java.frc.team4150.robot.command.base.Command;
 import main.java.frc.team4150.robot.subsystem.DoubleSolenoidSystem;
 import main.java.frc.team4150.robot.subsystem.DoubleSolenoidSystem.Direction;
 import main.java.frc.team4150.robot.subsystem.motor.MotorSystem;
-import main.java.frc.team4150.robot.util.Time;
-import main.java.frc.team4150.robot.util.Time.Unit;
 
 public class ClimbCommand extends Command {
 	private double speed; 
-	private Time time; 
+	private long time; 
 	private long startTime; 
 	private MotorSystem motor; 
 	private DoubleSolenoidSystem brake;  
-	public ClimbCommand(MotorSystem motor, DoubleSolenoidSystem brake, double speed, Time time) {
+	public ClimbCommand(MotorSystem motor, DoubleSolenoidSystem brake, double speed, long time) {
 		this.speed = speed; 
 		this.time = time; 
 		this.motor = motor; 
@@ -22,7 +20,7 @@ public class ClimbCommand extends Command {
 	}
 	@Override
 	public boolean periodic(RobotBase robot) {
-		if (System.currentTimeMillis() - startTime > time.to(Unit.MILLIS)) {
+		if (System.currentTimeMillis() - startTime > time) {
 			motor.stop();
 			brake.setDirection(Direction.REVERSE);
 			return true;

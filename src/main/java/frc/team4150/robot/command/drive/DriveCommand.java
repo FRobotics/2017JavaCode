@@ -2,7 +2,6 @@ package main.java.frc.team4150.robot.command.drive;
 
 import main.java.frc.team4150.robot.command.base.Command;
 import main.java.frc.team4150.robot.subsystem.drive.DriveSystem;
-import main.java.frc.team4150.robot.util.Distance;
 import main.java.frc.team4150.robot.util.PositionControl;
 
 public abstract class DriveCommand extends Command {
@@ -10,7 +9,7 @@ public abstract class DriveCommand extends Command {
 	private DriveSystem driveSystem;
 	private PositionControl posControl;
 
-	public DriveCommand(DriveSystem driveSystem, Distance distance) {
+	public DriveCommand(DriveSystem driveSystem, double distance) {
 		this.driveSystem = driveSystem;
 		this.posControl = new PositionControl(distance, "drive", driveSystem.getWheelRadius());
 	}
@@ -29,6 +28,5 @@ public abstract class DriveCommand extends Command {
 	
 	@Override
 	public void init() {
-		driveSystem.resetEncoders();
-	}
+		driveSystem.resetEncoders();	}
 }

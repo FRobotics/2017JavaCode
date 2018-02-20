@@ -11,13 +11,10 @@ import main.java.frc.team4150.robot.subsystem.DoubleSolenoidSystem.Direction;
 import main.java.frc.team4150.robot.subsystem.drive.DriveSystem;
 import main.java.frc.team4150.robot.subsystem.drive.EncoderSystem;
 import main.java.frc.team4150.robot.subsystem.motor.types.SparkSystem;
-import main.java.frc.team4150.robot.util.Distance;
-import main.java.frc.team4150.robot.util.Distance.Unit;
-import main.java.frc.team4150.robot.util.Time;
 
 public class Robot extends main.java.frc.team4150.robot.RobotBase {
 
-	public static final Distance WHEEL_RADIUS = new Distance(3, Distance.Unit.INCHES);
+	public static final double WHEEL_RADIUS = 3 * 12;
 
 	public Robot() {
 		super(Subsystem.values(), Input.values());
@@ -34,10 +31,10 @@ public class Robot extends main.java.frc.team4150.robot.RobotBase {
 		DriveSystem drive = (DriveSystem) Subsystem.DRIVE.getSubsystem();
 		DoubleSolenoidSystem gear_platform = (DoubleSolenoidSystem) Subsystem.GEAR_PLATFORM.getSubsystem();
 		DoubleSolenoidSystem gear_arms = (DoubleSolenoidSystem) Subsystem.GEAR_ARMS.getSubsystem();
-		this.addCommand(new DriveStraightCommand(drive, new Distance(30, Distance.Unit.INCHES)));
-		this.addCommand(new TurnCommand(drive, new Distance(30, Distance.Unit.INCHES), false));
-		this.addCommand(new SetDoubleSolenoidCommand(gear_platform, Direction.FORWARD, new Time(1, Time.Unit.SEC)));
-		this.addCommand(new SetDoubleSolenoidCommand(gear_arms, Direction.FORWARD, new Time(1, Time.Unit.SEC)));
+		this.addCommand(new DriveStraightCommand(drive, 30));
+		this.addCommand(new TurnCommand(drive, 30, false));
+		this.addCommand(new SetDoubleSolenoidCommand(gear_platform, Direction.FORWARD, 1000));
+		this.addCommand(new SetDoubleSolenoidCommand(gear_arms, Direction.FORWARD, 1000));
 	}
 
 	@Override
@@ -64,8 +61,8 @@ public class Robot extends main.java.frc.team4150.robot.RobotBase {
 
 		SmartDashboard.putNumber("leftMotor", drive.getLeftMotor().getSpeed());
 		SmartDashboard.putNumber("rightMotor", drive.getRightMotor().getSpeed());
-		SmartDashboard.putNumber("leftEncoder", leftEncoder.getDistance().to(Unit.FEET));
-		SmartDashboard.putNumber("rightEncoder", rightEncoder.getDistance().to(Unit.FEET));
+		SmartDashboard.putNumber("leftEncoder", leftEncoder.getDistance());
+		SmartDashboard.putNumber("rightEncoder", rightEncoder.getDistance());
 
 		// TODO: turn these into commands (don't use these)
 

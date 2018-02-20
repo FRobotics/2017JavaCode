@@ -5,12 +5,10 @@ import main.java.frc.team4150.robot.command.drive.DriveStraightCommand;
 import main.java.frc.team4150.robot.input.joystick.ControllerInput;
 import main.java.frc.team4150.robot.subsystem.drive.DriveSystem;
 import main.java.frc.team4150.robot.subsystem.drive.QuadDriveSystem;
-import main.java.frc.team4150.robot.util.Distance;
-import main.java.frc.team4150.robot.util.Distance.Unit;
 
 public class Robot extends RobotBase {
 
-	public static final Distance WHEEL_RADIUS = new Distance(3, Distance.Unit.INCHES);
+	public static final double WHEEL_RADIUS = 3 * 12;
 
 	public Robot() {
 		super(Subsystem.values(), Input.values());
@@ -24,7 +22,7 @@ public class Robot extends RobotBase {
 	@Override
 	public void addCommands() {
 		DriveSystem drive = (DriveSystem) Subsystem.DRIVE.getSubsystem();
-		addCommand(new DriveStraightCommand(drive, new Distance(2, Unit.FEET)));
+		addCommand(new DriveStraightCommand(drive, 2 * 12));
 		/*
 		SolenoidSystem arm = (SolenoidSystem) Subsystem.ARM.getSubsystem();
 

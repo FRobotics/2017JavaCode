@@ -4,20 +4,20 @@ import java.util.ArrayList;
 
 import edu.wpi.first.wpilibj.Encoder;
 import main.java.frc.team4150.robot.subsystem.base.SubsystemBase;
-import main.java.frc.team4150.robot.util.Distance;
+import main.java.frc.team4150.robot.util.Util;
 
 public class EncoderSystem extends SubsystemBase {
 	
-	private ArrayList<Distance> previousDistances;
+	private ArrayList<Double> previousDistances;
 	private Encoder encoder;
 	
-	public EncoderSystem(int port1, int port2, Distance radius, boolean invert) {
+	public EncoderSystem(int port1, int port2, double radius, boolean invert) {
 		encoder = new Encoder(port1, port2, invert, Encoder.EncodingType.k4X);
-		encoder.setDistancePerPulse(radius.to(Distance.Unit.INCHES) * Distance.inchPerDegree);
-		previousDistances = new ArrayList<Distance>();
+		encoder.setDistancePerPulse(radius * Util.inchPerDegree);
+		previousDistances = new ArrayList<Double>();
 	}
 	
-	public EncoderSystem(int port1, int port2, Distance radius) {
+	public EncoderSystem(int port1, int port2, double radius) {
 		this(port1, port2, radius, false);
 	}
 
@@ -31,8 +31,8 @@ public class EncoderSystem extends SubsystemBase {
 		
 	}
 	
-	public Distance getDistance() {
-		return new Distance(encoder.getDistance(), Distance.Unit.INCHES);
+	public double getDistance() {
+		return encoder.getDistance();
 	}
 	
 	public void resetDistance() {

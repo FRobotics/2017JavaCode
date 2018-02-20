@@ -10,12 +10,10 @@ import main.java.frc.team4150.robot.subsystem.drive.EncoderSystem;
 import main.java.frc.team4150.robot.subsystem.drive.QuadDriveSystem;
 import main.java.frc.team4150.robot.subsystem.drive.ShifterSystem;
 import main.java.frc.team4150.robot.subsystem.motor.LimitedMotorSystem;
-import main.java.frc.team4150.robot.util.Distance;
-import main.java.frc.team4150.robot.util.Distance.Unit;
 
 public class Robot extends RobotBase {
 
-	public static final Distance WHEEL_RADIUS = new Distance(3, Distance.Unit.INCHES);
+	public static final double WHEEL_RADIUS = 3 * 12;
 
 	public Robot() {
 		super(Subsystem.values(), Input.values());
@@ -111,7 +109,7 @@ public class Robot extends RobotBase {
 
 		SmartDashboard.putNumber("leftMotor", drive.getLeftMotor().getSpeed());
 		SmartDashboard.putNumber("rightMotor", drive.getRightMotor().getSpeed());
-		SmartDashboard.putNumber("leftEncoder", leftEncoder.getDistance().to(Unit.FEET));
-		SmartDashboard.putNumber("rightEncoder", rightEncoder.getDistance().to(Unit.FEET));
+		SmartDashboard.putNumber("leftEncoder", leftEncoder.getDistance());
+		SmartDashboard.putNumber("rightEncoder", rightEncoder.getDistance());
 	}
 }
