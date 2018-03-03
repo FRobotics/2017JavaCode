@@ -40,6 +40,8 @@ public abstract class RobotBase extends IterativeRobot {
      * Main code for teleop; periodically called until teleop ends
      */
     public abstract void teleopLoop();
+    
+    public abstract void stopLoop();
 
     @Override
     public void robotInit() {
@@ -85,6 +87,11 @@ public abstract class RobotBase extends IterativeRobot {
     
     @Override
     public void disabledInit() {
+    	
+    }
+    
+    @Override
+    public void disabledPeriodic() {
     	
     }
     

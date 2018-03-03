@@ -87,4 +87,8 @@ public class Robot extends main.java.frc.team4150.robot.RobotBase {
 
 		// TODO: deal with other subsystems based on input
 	}
+
+	@Override
+	public void stopLoop() {
+	}
 }

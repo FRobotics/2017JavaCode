@@ -2,14 +2,21 @@ package main.java.frc.team4150.robot.code2018;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import main.java.frc.team4150.robot.RobotBase;
+import main.java.frc.team4150.robot.command.SetSolenoidCommand;
+import main.java.frc.team4150.robot.command.drive.DriveStraightCommand;
+import main.java.frc.team4150.robot.command.drive.TurnCommand;
+import main.java.frc.team4150.robot.input.joystick.Axis;
 import main.java.frc.team4150.robot.input.joystick.Button;
 import main.java.frc.team4150.robot.input.joystick.ControllerInput;
 import main.java.frc.team4150.robot.subsystem.DoubleSolenoidSystem;
 import main.java.frc.team4150.robot.subsystem.DoubleSolenoidSystem.Direction;
+import main.java.frc.team4150.robot.subsystem.SolenoidSystem;
+import main.java.frc.team4150.robot.subsystem.drive.DriveSystem;
 import main.java.frc.team4150.robot.subsystem.drive.EncoderSystem;
 import main.java.frc.team4150.robot.subsystem.drive.QuadDriveSystem;
 import main.java.frc.team4150.robot.subsystem.drive.ShifterSystem;
 import main.java.frc.team4150.robot.subsystem.motor.LimitedMotorSystem;
+import main.java.frc.team4150.robot.util.Util;
 
 public class Robot extends RobotBase {
 
@@ -26,8 +33,8 @@ public class Robot extends RobotBase {
 
 	@Override
 	public void addCommands() {
-		//DriveSystem drive = (DriveSystem) Subsystem.DRIVE.getSubsystem();
-		/*
+		DriveSystem drive = (DriveSystem) Subsystem.DRIVE.getSubsystem();
+
 		SolenoidSystem arm = (SolenoidSystem) Subsystem.ARM.getSubsystem();
 
 		String[] commandStrings = SmartDashboard.getStringArray("commands", new String[] {});
@@ -37,26 +44,24 @@ public class Robot extends RobotBase {
 			switch (command) {
 				case "driveStraight": {
 					double distance = Double.parseDouble(parts[1]);
-					this.addCommand(new DriveStraightCommand(drive, new Distance(distance, Unit.FEET)));
+					this.addCommand(new DriveStraightCommand(drive, distance));
 					break;
 				}
 				case "turn": {
 					double degrees = Double.parseDouble(parts[1]);
 					boolean turnLeft = Boolean.parseBoolean(parts[2]);
-					this.addCommand(new TurnCommand(drive, Distance.fromDegrees(degrees, drive.getWheelRadius()),
+					this.addCommand(new TurnCommand(drive, Util.fromDegrees(degrees, drive.getWheelRadius()),
 													turnLeft));
-					System.out.println("uh this isn't finished ahahah");
 					break;
 				}
 				case "setArm": {
 					boolean direction = Boolean.parseBoolean(parts[1]);
 					double wait = Double.parseDouble(parts[2]);
-					this.addCommand(new SetSolenoidCommand(	arm, direction,
-															new Time((int) (wait * 1000), Time.Unit.MILLIS)));
+					this.addCommand(new SetSolenoidCommand(arm, direction, (long) (wait * 1000)));
 					break;
 				}
 			}
-		}*/
+		}
 	}
 
 	@Override
@@ -95,9 +100,9 @@ public class Robot extends RobotBase {
 			elevator.stop();
 		}
 
-		if (controller2.buttonPressed(Button.X)) {
+		if (controller2.getAxis(Axis.TRIGGER_LEFT) > 0.5) {
 			arm.setDirection(Direction.REVERSE);
-		} else if (controller2.buttonPressed(Button.Y)) {
+		} else if (controller2.getAxis(Axis.TRIGGER_RIGHT) > 0.5) {
 			arm.setDirection(Direction.FORWARD);
 		}
 
@@ -111,5 +116,9 @@ public class Robot extends RobotBase {
 		SmartDashboard.putNumber("rightMotor", drive.getRightMotor().getSpeed());
 		SmartDashboard.putNumber("leftEncoder", leftEncoder.getDistance());
 		SmartDashboard.putNumber("rightEncoder", rightEncoder.getDistance());
+	}
+
+	@Override
+	public void stopLoop() {
 	}
 }
