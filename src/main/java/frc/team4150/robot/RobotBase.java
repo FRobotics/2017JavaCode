@@ -92,7 +92,13 @@ public abstract class RobotBase extends IterativeRobot {
     
     @Override
     public void disabledPeriodic() {
-    	
+    	stopLoop();
+    	for (InputEnum inputEnum : this.inputEnums) {
+            if (inputEnum.getInput() instanceof ControllerInput) {
+                ControllerInput joystickInput = (ControllerInput) inputEnum.getInput();
+                joystickInput.postPeriodic();
+            }
+        }
     }
     
     /**

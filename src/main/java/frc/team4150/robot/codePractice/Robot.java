@@ -80,16 +80,19 @@ public class Robot extends RobotBase {
 		} else if (controller2.getAxis(Axis.TRIGGER_RIGHT) > 0.5) {
 			arm.setDirection(Direction.FORWARD);
 		}
-		
-		SmartDashboard.putNumber("leftMotor", drive.getLeftMotor().getSpeed());
-		SmartDashboard.putNumber("rightMotor", drive.getRightMotor().getSpeed());
 
 		drive.customDrive(controller, true);
+		updateNTVariables();
 	}
 
 	@Override
 	public void stopLoop() {
-		SmartDashboard.putNumber("leftMotor", 0);
-		SmartDashboard.putNumber("rightMotor", 0);
+		updateNTVariables();
+	}
+	
+	public void updateNTVariables () {
+		QuadDriveSystem drive = (QuadDriveSystem) Subsystem.DRIVE.getSubsystem();
+		SmartDashboard.putNumber("vars/motors/left/speed", drive.getLeftMotor().getSpeed());
+		SmartDashboard.putNumber("vars/motors/right/speed", drive.getRightMotor().getSpeed());
 	}
 }

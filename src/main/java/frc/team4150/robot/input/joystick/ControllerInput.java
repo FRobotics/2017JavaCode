@@ -3,6 +3,7 @@ package main.java.frc.team4150.robot.input.joystick;
 import java.util.HashMap;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import main.java.frc.team4150.robot.input.InputBase;
 
 public class ControllerInput extends InputBase {
@@ -55,6 +56,7 @@ public class ControllerInput extends InputBase {
         for (Button button : Button.values()) {
             int id = button.getId();
             buttonsPressed.put(id, joystick.getRawButton(id));
+            SmartDashboard.putBoolean("vars/joysticks/" + joystick.getPort() + "/buttons/" + button, buttonDown(button));
         }
     }
 
