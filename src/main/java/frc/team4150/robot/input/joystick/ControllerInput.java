@@ -56,7 +56,7 @@ public class ControllerInput extends InputBase {
         for (Button button : Button.values()) {
             int id = button.getId();
             buttonsPressed.put(id, joystick.getRawButton(id));
-            SmartDashboard.putBoolean("vars/joysticks/port_" + joystick.getPort() + "/buttons/" + button, buttonDown(button));
+            SmartDashboard.putBoolean("vars/controllers/port_" + joystick.getPort() + "/buttons/" + button, buttonDown(button));
         }
     }
 
