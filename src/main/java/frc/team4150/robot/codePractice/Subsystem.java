@@ -12,7 +12,9 @@ public enum Subsystem implements SubsystemEnum {
     DRIVE(new QuadDriveSystem(new JaguarSystem(0), new JaguarSystem(1), new JaguarSystem(2), new JaguarSystem(3),
     		new EncoderSystem(0, 1, Robot.WHEEL_RADIUS), new EncoderSystem(2, 3, Robot.WHEEL_RADIUS, true),
     		Robot.WHEEL_RADIUS)),
-    ARM(new DoubleSolenoidSystem(0, 1, Direction.REVERSE))
+    ARM(new DoubleSolenoidSystem(0, 1, Direction.FORWARD)),
+    DISC_LAUNCHER_MOTOR_1(new JaguarSystem(4)),
+    DISC_LAUNCHER_MOTOR_2(new JaguarSystem(5))
     ;
 
     private SubsystemBase subsystem;

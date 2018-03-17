@@ -1,5 +1,6 @@
 package main.java.frc.team4150.robot;
 
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import main.java.frc.team4150.robot.command.base.Command;
 import main.java.frc.team4150.robot.command.base.CommandManager;
@@ -50,6 +51,7 @@ public abstract class RobotBase extends IterativeRobot {
             subsystem.getSubsystem().init();
         }
         start();
+        CameraServer.getInstance().startAutomaticCapture();
     }
 
     @Override
