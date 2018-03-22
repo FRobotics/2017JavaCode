@@ -91,4 +91,8 @@ public class Robot extends main.java.frc.team4150.robot.RobotBase {
 	@Override
 	public void stopLoop() {
 	}
+
+	@Override
+	public void updateNTVariables() {
+	}
 }

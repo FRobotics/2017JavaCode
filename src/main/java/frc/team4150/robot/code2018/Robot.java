@@ -121,4 +121,10 @@ public class Robot extends RobotBase {
 	@Override
 	public void stopLoop() {
 	}
+
+	@Override
+	public void updateNTVariables() {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -49,6 +49,14 @@ public class PositionControl {
 				SmartDashboard.getNumber(key + "PosControl/rate", 0.1),
 				SmartDashboard.getNumber(key + "PosControl/deadband", 0.5), wheelRadius);
 	}
+	
+	public PositionControl(String key, double wheelRadius) {
+		this(	SmartDashboard.getNumber(key + "PosControl/target", 0),
+				SmartDashboard.getNumber(key + "PosControl/minSpeed", 0.2),
+				SmartDashboard.getNumber(key + "PosControl/maxSpeed", 0.3),
+				SmartDashboard.getNumber(key + "PosControl/rate", 0.1),
+				SmartDashboard.getNumber(key + "PosControl/deadband", 0.5), wheelRadius);
+	}
 
 	public boolean onTarget(double distanceTraveled) {
 		double target = this.target;
@@ -63,9 +71,10 @@ public class PositionControl {
 	public double getSpeed(double distanceTraveled) {
 		double target = Util.toDegrees(this.target, wheelRadius);
 		double traveled = Util.toDegrees(distanceTraveled, wheelRadius);
-		return Math.min((-this.rate * Math.abs(traveled - (target / 2) + (this.deadband / 2))
+		double abcd = Math.min((-this.rate * Math.abs(traveled - (target / 2) + (this.deadband / 2))
 				- (this.deadband * this.rate / 2)) + this.rate * Math.abs(this.target / 2) + this.minSpeed,
-						this.maxSpeed);
+				this.maxSpeed);
+		return abcd;
 	}
 
 	public double getTarget() {

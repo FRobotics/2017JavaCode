@@ -2,7 +2,7 @@ package main.java.frc.team4150.robot.codePractice;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import main.java.frc.team4150.robot.RobotBase;
-import main.java.frc.team4150.robot.command.SetSolenoidCommand;
+import main.java.frc.team4150.robot.command.SetDoubleSolenoidCommand;
 import main.java.frc.team4150.robot.command.drive.DriveStraightCommand;
 import main.java.frc.team4150.robot.command.drive.TurnCommand;
 import main.java.frc.team4150.robot.input.joystick.Axis;
@@ -10,7 +10,6 @@ import main.java.frc.team4150.robot.input.joystick.Button;
 import main.java.frc.team4150.robot.input.joystick.ControllerInput;
 import main.java.frc.team4150.robot.subsystem.DoubleSolenoidSystem;
 import main.java.frc.team4150.robot.subsystem.DoubleSolenoidSystem.Direction;
-import main.java.frc.team4150.robot.subsystem.SolenoidSystem;
 import main.java.frc.team4150.robot.subsystem.drive.DriveSystem;
 import main.java.frc.team4150.robot.subsystem.drive.QuadDriveSystem;
 import main.java.frc.team4150.robot.subsystem.motor.types.JaguarSystem;
@@ -32,9 +31,7 @@ public class Robot extends RobotBase {
 	@Override
 	public void addCommands() {
 		DriveSystem drive = (DriveSystem) Subsystem.DRIVE.getSubsystem();
-		addCommand(new DriveStraightCommand(drive, 2 * 12));
-		SolenoidSystem arm = (SolenoidSystem) Subsystem.ARM.getSubsystem();
-
+		DoubleSolenoidSystem arm = (DoubleSolenoidSystem) Subsystem.ARM.getSubsystem();
 		String[] commandStrings = SmartDashboard.getStringArray("commands", new String[] {});
 		for (String commandString : commandStrings) {
 			String[] parts = commandString.split(":");
@@ -50,13 +47,19 @@ public class Robot extends RobotBase {
 					boolean turnLeft = Boolean.parseBoolean(parts[2]);
 					this.addCommand(new TurnCommand(drive, Util.fromDegrees(degrees, drive.getWheelRadius()),
 													turnLeft));
-					System.out.println("uh this isn't finished ahahah");
 					break;
 				}
 				case "setArm": {
-					boolean direction = Boolean.parseBoolean(parts[1]);
+					SmartDashboard.putBoolean("worked", true);
+					boolean open = Boolean.parseBoolean(parts[1]);
 					double wait = Double.parseDouble(parts[2]);
-					this.addCommand(new SetSolenoidCommand(	arm, direction, (long)(wait * 1000)));
+					Direction direction;
+					if(open) {
+						direction = Direction.FORWARD;
+					} else {
+						direction = Direction.REVERSE;
+					}
+					this.addCommand(new SetDoubleSolenoidCommand(arm, direction, (long)(wait * 1000)));
 					break;
 				}
 			}
@@ -70,7 +73,6 @@ public class Robot extends RobotBase {
 
 	@Override
 	public void teleopLoop() {
-
 		ControllerInput controller = (ControllerInput) Input.CONTROLLER_MOVEMENT.getInput();
 		ControllerInput controller2 = (ControllerInput) Input.CONTROLLER_ACTIONS.getInput();
 		
@@ -94,12 +96,10 @@ public class Robot extends RobotBase {
 		}
 
 		drive.customDrive(controller, true);
-		updateNTVariables();
 	}
 
 	@Override
 	public void stopLoop() {
-		updateNTVariables();
 	}
 	
 	public void updateNTVariables () {

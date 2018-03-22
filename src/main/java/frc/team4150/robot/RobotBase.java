@@ -7,6 +7,7 @@ import main.java.frc.team4150.robot.command.base.CommandManager;
 import main.java.frc.team4150.robot.input.InputEnum;
 import main.java.frc.team4150.robot.input.joystick.ControllerInput;
 import main.java.frc.team4150.robot.subsystem.base.SubsystemEnum;
+import main.java.frc.team4150.robot.subsystem.motor.MotorSystem;
 
 public abstract class RobotBase extends IterativeRobot {
 
@@ -43,6 +44,8 @@ public abstract class RobotBase extends IterativeRobot {
     public abstract void teleopLoop();
     
     public abstract void stopLoop();
+    
+    public abstract void updateNTVariables();
 
     @Override
     public void robotInit() {
@@ -62,7 +65,7 @@ public abstract class RobotBase extends IterativeRobot {
     @Override
     public void teleopPeriodic() {
         teleopLoop();
-        commandManager.periodic(this);
+        //commandManager.periodic(this);
         for (SubsystemEnum subsystem : subsystemEnums) {
             subsystem.getSubsystem().periodic();
         }
@@ -72,6 +75,7 @@ public abstract class RobotBase extends IterativeRobot {
                 joystickInput.postPeriodic();
             }
         }
+        updateNTVariables();
     }
 
     @Override
@@ -85,11 +89,18 @@ public abstract class RobotBase extends IterativeRobot {
         for (SubsystemEnum subsystem : subsystemEnums) {
             subsystem.getSubsystem().periodic();
         }
+        updateNTVariables();
     }
     
     @Override
     public void disabledInit() {
-    	
+    	this.commandManager.clear();
+    	for (SubsystemEnum se : this.subsystemEnums) {
+    		if(se.getSubsystem() instanceof MotorSystem) {
+    			MotorSystem ms = (MotorSystem)se.getSubsystem();
+    			ms.forceStop();
+    		}
+    	}
     }
     
     @Override
@@ -101,6 +112,7 @@ public abstract class RobotBase extends IterativeRobot {
                 joystickInput.postPeriodic();
             }
         }
+    	updateNTVariables();
     }
     
     /**

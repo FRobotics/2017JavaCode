@@ -43,4 +43,9 @@ public class CommandManager {
     	current.init();
     }
 
+    public void clear() {
+    	current = null;
+    	this.commands.clear();
+    }
+    
 }

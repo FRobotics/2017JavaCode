@@ -20,6 +20,7 @@ public class TalonSRXSystem extends MotorSystem {
 
 	@Override
 	public void periodic() {
+		super.periodic();
 		motor.set(getSpeed());
 	}
 	

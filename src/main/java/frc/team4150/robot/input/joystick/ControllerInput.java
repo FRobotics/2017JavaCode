@@ -55,8 +55,9 @@ public class ControllerInput extends InputBase {
     public void postPeriodic() {
         for (Button button : Button.values()) {
             int id = button.getId();
-            buttonsPressed.put(id, joystick.getRawButton(id));
-            SmartDashboard.putBoolean("vars2/controllers/port_" + joystick.getPort() + "/buttons/" + button, buttonDown(button));
+            boolean pressed = joystick.getRawButton(id);
+            buttonsPressed.put(id, pressed);
+            SmartDashboard.putBoolean("vars2/controllers/port_" + joystick.getPort() + "/buttons/" + button, pressed);
         }
     }
 

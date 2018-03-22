@@ -13,20 +13,21 @@ public abstract class DriveCommand extends Command {
 		this.driveSystem = driveSystem;
 		this.posControl = new PositionControl(distance, "drive", driveSystem.getWheelRadius());
 	}
-	
+
 	public DriveSystem getDriveSystem() {
 		return driveSystem;
 	}
-	
+
 	public boolean isFinished() {
 		return posControl.onTarget(driveSystem.getDistanceTraveled());
 	}
-	
+
 	public double getSpeed() {
 		return posControl.getSpeed(driveSystem.getDistanceTraveled());
 	}
-	
+
 	@Override
 	public void init() {
-		driveSystem.resetEncoders();	}
+		driveSystem.resetEncoders();
+	}
 }
