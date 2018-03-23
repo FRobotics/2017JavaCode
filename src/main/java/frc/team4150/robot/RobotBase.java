@@ -2,6 +2,7 @@ package main.java.frc.team4150.robot;
 
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import main.java.frc.team4150.robot.command.base.Command;
 import main.java.frc.team4150.robot.command.base.CommandManager;
 import main.java.frc.team4150.robot.input.InputEnum;
@@ -59,6 +60,7 @@ public abstract class RobotBase extends IterativeRobot {
 
     @Override
     public void teleopInit() {
+    	SmartDashboard.putBoolean("vars/teleopEnabled", true);
         teleopStart();
     }
 
@@ -80,6 +82,7 @@ public abstract class RobotBase extends IterativeRobot {
 
     @Override
     public void autonomousInit() {
+    	SmartDashboard.putBoolean("vars/teleopEnabled", false);
         addCommands();
     }
 
@@ -94,6 +97,7 @@ public abstract class RobotBase extends IterativeRobot {
     
     @Override
     public void disabledInit() {
+    	SmartDashboard.putBoolean("vars/teleopEnabled", false);
     	this.commandManager.clear();
     	for (SubsystemEnum se : this.subsystemEnums) {
     		if(se.getSubsystem() instanceof MotorSystem) {

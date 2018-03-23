@@ -32,5 +32,13 @@ public class ShifterSystem extends SubsystemBase {
 	public void periodic() {
 		solenoid.periodic();
 	}
+	
+	public boolean isHigh() {
+		return solenoid.getDirection() == highDirection;
+	}
+	
+	public boolean isLow() {
+		return solenoid.getDirection() != highDirection;
+	}
 
 }

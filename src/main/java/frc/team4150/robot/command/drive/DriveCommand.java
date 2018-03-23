@@ -19,7 +19,7 @@ public abstract class DriveCommand extends Command {
 	}
 
 	public boolean isFinished() {
-		return posControl.onTarget(driveSystem.getDistanceTraveled());
+		return posControl.onTarget(driveSystem.getLeftEncoder().getDistance()); //HACK
 	}
 
 	public double getSpeed() {

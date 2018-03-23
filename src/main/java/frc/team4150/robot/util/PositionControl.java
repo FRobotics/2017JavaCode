@@ -59,22 +59,26 @@ public class PositionControl {
 	}
 
 	public boolean onTarget(double distanceTraveled) {
-		double target = this.target;
 		double traveled = distanceTraveled;
-		if (Math.abs(target - traveled) > deadband) {
-			return false;
-		} else {
+		if (Math.abs(target - traveled) < deadband) {
 			return true;
+		} else {
+			return false;
 		}
 	}
 
 	public double getSpeed(double distanceTraveled) {
-		double target = Util.toDegrees(this.target, wheelRadius);
-		double traveled = Util.toDegrees(distanceTraveled, wheelRadius);
-		double abcd = Math.min((-this.rate * Math.abs(traveled - (target / 2) + (this.deadband / 2))
-				- (this.deadband * this.rate / 2)) + this.rate * Math.abs(this.target / 2) + this.minSpeed,
-				this.maxSpeed);
-		return abcd;
+		double traveled = distanceTraveled;
+		double speed = 0;
+		if (traveled < (target - deadband) - (maxSpeed - minSpeed) / rate) {
+			speed = Math.min(rate * traveled + minSpeed, maxSpeed);
+		} else if (traveled < target - traveled) {
+			speed = -rate * (traveled - (target - deadband));
+		} else {
+			speed = 0;
+		}
+		SmartDashboard.putString("testing", traveled + "/" + target + ": " + speed);
+		return speed;
 	}
 
 	public double getTarget() {

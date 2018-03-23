@@ -25,7 +25,9 @@ public class DigitalInputSystem extends SubsystemBase {
 	}
 	
 	public boolean get() {
-		return triggered;
+		boolean rawInput = this.input.get();
+		boolean input = inverted ? rawInput : !rawInput;
+		return input;
 	}
 	
 	public boolean triggered() {

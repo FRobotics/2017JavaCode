@@ -8,7 +8,7 @@ public class TurnCommand extends DriveCommand {
 	private boolean turnLeft;
 
 	public TurnCommand(DriveSystem driveSystem, double distance, boolean turnLeft) {
-		super(driveSystem, distance);
+		super(driveSystem, (distance / 360) * 24 * Math.PI);
 		this.turnLeft = turnLeft;
 	}
 
