@@ -2,18 +2,13 @@ package main.java.frc.team4150.robot.codePractice;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import main.java.frc.team4150.robot.RobotBase;
-import main.java.frc.team4150.robot.command.SetDoubleSolenoidCommand;
-import main.java.frc.team4150.robot.command.drive.DriveStraightCommand;
-import main.java.frc.team4150.robot.command.drive.TurnCommand;
 import main.java.frc.team4150.robot.input.joystick.Axis;
 import main.java.frc.team4150.robot.input.joystick.Button;
 import main.java.frc.team4150.robot.input.joystick.ControllerInput;
 import main.java.frc.team4150.robot.subsystem.DoubleSolenoidSystem;
 import main.java.frc.team4150.robot.subsystem.DoubleSolenoidSystem.Direction;
-import main.java.frc.team4150.robot.subsystem.drive.DriveSystem;
 import main.java.frc.team4150.robot.subsystem.drive.QuadDriveSystem;
 import main.java.frc.team4150.robot.subsystem.motor.types.JaguarSystem;
-import main.java.frc.team4150.robot.util.Util;
 
 public class Robot extends RobotBase {
 
@@ -30,7 +25,7 @@ public class Robot extends RobotBase {
 
 	@Override
 	public void addCommands() {
-		DriveSystem drive = (DriveSystem) Subsystem.DRIVE.getSubsystem();
+		/*DriveSystem drive = (DriveSystem) Subsystem.DRIVE.getSubsystem();
 		DoubleSolenoidSystem arm = (DoubleSolenoidSystem) Subsystem.ARM.getSubsystem();
 		String[] commandStrings = SmartDashboard.getStringArray("commands", new String[] {});
 		for (String commandString : commandStrings) {
@@ -63,7 +58,7 @@ public class Robot extends RobotBase {
 					break;
 				}
 			}
-		}
+		}*/
 	}
 
 	@Override

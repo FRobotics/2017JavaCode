@@ -6,6 +6,7 @@ import main.java.frc.team4150.robot.RobotBase;
 import main.java.frc.team4150.robot.command.SetDoubleSolenoidCommand;
 import main.java.frc.team4150.robot.command.TimedDriveCommand;
 import main.java.frc.team4150.robot.command.TimedMotorCommand;
+import main.java.frc.team4150.robot.command.WaitCommand;
 import main.java.frc.team4150.robot.command.drive.DriveStraightCommand;
 import main.java.frc.team4150.robot.command.drive.TurnCommand;
 import main.java.frc.team4150.robot.input.joystick.Axis;
@@ -13,12 +14,12 @@ import main.java.frc.team4150.robot.input.joystick.Button;
 import main.java.frc.team4150.robot.input.joystick.ControllerInput;
 import main.java.frc.team4150.robot.subsystem.DoubleSolenoidSystem;
 import main.java.frc.team4150.robot.subsystem.DoubleSolenoidSystem.Direction;
+import main.java.frc.team4150.robot.subsystem.GyroSystem;
 import main.java.frc.team4150.robot.subsystem.drive.DriveSystem;
 import main.java.frc.team4150.robot.subsystem.drive.EncoderSystem;
 import main.java.frc.team4150.robot.subsystem.drive.QuadDriveSystem;
 import main.java.frc.team4150.robot.subsystem.drive.ShifterSystem;
 import main.java.frc.team4150.robot.subsystem.motor.LimitedMotorSystem;
-import main.java.frc.team4150.robot.util.Util;
 
 public class Robot extends RobotBase {
 
@@ -35,60 +36,69 @@ public class Robot extends RobotBase {
 
 	@Override
 	public void addCommands() {
-		DriveSystem drive = (DriveSystem) Subsystem.DRIVE.getSubsystem();
-		DoubleSolenoidSystem arm = (DoubleSolenoidSystem) Subsystem.ARM.getSubsystem();
-		
 		boolean testing = SmartDashboard.getBoolean("testingMode", false);
 		if (testing) {
-			String[] commandStrings = SmartDashboard.getStringArray("commands", new String[] {});
-			for (String commandString : commandStrings) {
-				String[] parts = commandString.split(":");
-				String command = parts[0];
-				switch (command) {
-					case "driveStraight": {
-						double distance = Double.parseDouble(parts[1]);
-						this.addCommand(new DriveStraightCommand(drive, distance));
-						break;
-					}
-					case "turn": {
-						double degrees = Double.parseDouble(parts[1]);
-						boolean turnLeft = Boolean.parseBoolean(parts[2]);
-						this.addCommand(new TurnCommand(drive, Util.fromDegrees(degrees, drive.getWheelRadius()),
-														turnLeft));
-						break;
-					}
-					case "setArm": {
-						boolean open = Boolean.parseBoolean(parts[1]);
-						double wait = Double.parseDouble(parts[2]);
-						Direction direction;
-						if (open) {
-							direction = Direction.FORWARD;
-						} else {
-							direction = Direction.REVERSE;
-						}
-						this.addCommand(new SetDoubleSolenoidCommand(arm, direction, (long) (wait * 1000)));
-						break;
-					}
-				}
-			}
+			// LimitedMotorSystem elevator = (LimitedMotorSystem)
+			// Subsystem.ELEVATOR.getSubsystem();
+			// this.addCommand(new TimedMotorCommand(elevator, -0.7, 2 * 1000));
+			normalAuto();
+			//testingAuto();
 		} else {
 			baselineAuto();
 		}
 	}
-	
+
+	public void testingAuto() {
+		DriveSystem drive = (DriveSystem) Subsystem.DRIVE.getSubsystem();
+		DoubleSolenoidSystem arm = (DoubleSolenoidSystem) Subsystem.ARM.getSubsystem();
+		GyroSystem gyro = (GyroSystem) Subsystem.GYRO.getSubsystem();
+
+		String[] commandStrings = SmartDashboard.getStringArray("commands", new String[] {});
+		for (String commandString : commandStrings) {
+			String[] parts = commandString.split(":");
+			String command = parts[0];
+			switch (command) {
+				case "driveStraight": {
+					double distance = Double.parseDouble(parts[1]);
+					this.addCommand(new DriveStraightCommand(drive, distance));
+					break;
+				}
+				case "turn": {
+					double degrees = Double.parseDouble(parts[1]);
+					boolean turnLeft = Boolean.parseBoolean(parts[2]);
+					this.addCommand(new TurnCommand(drive, gyro, degrees, turnLeft));
+					break;
+				}
+				case "setArm": {
+					boolean open = Boolean.parseBoolean(parts[1]);
+					double wait = Double.parseDouble(parts[2]);
+					Direction direction;
+					if (open) {
+						direction = Direction.FORWARD;
+					} else {
+						direction = Direction.REVERSE;
+					}
+					this.addCommand(new SetDoubleSolenoidCommand(arm, direction, (long) (wait * 1000)));
+					break;
+				}
+			}
+		}
+	}
+
 	public void baselineAuto() {
 		DriveSystem drive = (DriveSystem) Subsystem.DRIVE.getSubsystem();
 		this.addCommand(new TimedDriveCommand(drive, -0.5, 7 * 1000));
 	}
-	
+
 	public void normalAuto() {
 		DriveSystem drive = (DriveSystem) Subsystem.DRIVE.getSubsystem();
 		DoubleSolenoidSystem arm = (DoubleSolenoidSystem) Subsystem.ARM.getSubsystem();
 		LimitedMotorSystem elevator = (LimitedMotorSystem) Subsystem.ELEVATOR.getSubsystem();
-		
+		GyroSystem gyro = (GyroSystem) Subsystem.GYRO.getSubsystem();
+
 		boolean colorSwitchSide = false;
 		boolean colorScaleSide = false;
-		String position = SmartDashboard.getString("position", "middle");
+		String position = SmartDashboard.getString("position", "left");
 		String gameData = DriverStation.getInstance().getGameSpecificMessage();
 		if (gameData.length() > 0) {
 			if ((position == "left" && gameData.charAt(0) == 'L') || (position == "right" && gameData.charAt(0) == 'R'))
@@ -97,35 +107,40 @@ public class Robot extends RobotBase {
 					|| (position == "right" && gameData.charAt(1) == 'R'))
 				colorScaleSide = true;
 		}
+		colorSwitchSide = true;
 		int i = -1;
 		switch (position) {
 			case "left":
 				i = -1;
 			case "right": {
 				if (colorSwitchSide) {
-					this.addCommand(new DriveStraightCommand(drive, 152));
-					this.addCommand(new TurnCommand(drive, 90, position == "left"));
-					this.addCommand(new DriveStraightCommand(drive, 18));
-					this.addCommand(new TimedMotorCommand(elevator, 0.5, 3 * 1000));
-					this.addCommand(new SetDoubleSolenoidCommand(arm, Direction.FORWARD, 1000));
+					this.addCommand(new DriveStraightCommand(drive, -140));
+					this.addCommand(new TurnCommand(drive, gyro, 60 * i, position == "left"));
+					this.addCommand(new TimedMotorCommand(elevator, -0.5, (int)(3.5 * 1000)));
+					this.addCommand(new DriveStraightCommand(drive, -18));
+					this.addCommand(new WaitCommand(500));
+					this.addCommand(new SetDoubleSolenoidCommand(arm, Direction.REVERSE, 1000));
 				} else if (colorScaleSide) {
-					this.addCommand(new DriveStraightCommand(drive, 312));
-					this.addCommand(new TurnCommand(drive, 90, position == "left"));
-					this.addCommand(new TimedMotorCommand(elevator, 0.5, 3 * 1000));
-					this.addCommand(new DriveStraightCommand(drive, 18));
-					this.addCommand(new SetDoubleSolenoidCommand(arm, Direction.FORWARD, 1000));
+					this.addCommand(new DriveStraightCommand(drive, -312));
+					this.addCommand(new TurnCommand(drive, gyro, 90 * i, position == "left"));
+					this.addCommand(new TimedMotorCommand(elevator, -0.8, 4500));
+					this.addCommand(new DriveStraightCommand(drive, -18));
+					this.addCommand(new WaitCommand(500));
+					this.addCommand(new SetDoubleSolenoidCommand(arm, Direction.REVERSE, 1000));
 				} else {
-					this.addCommand(new DriveStraightCommand(drive, 152));
+					this.addCommand(new DriveStraightCommand(drive, -152));
 				}
+				break;
 			}
 			case "middle": {
-				this.addCommand(new DriveStraightCommand(drive, 40));
-				this.addCommand(new TurnCommand(drive, 90, gameData.charAt(0) == 'L'));
-				this.addCommand(new DriveStraightCommand(drive, 54));
-				this.addCommand(new TurnCommand(drive, 90, gameData.charAt(0) == 'R'));
-				this.addCommand(new DriveStraightCommand(drive, 112));
-				this.addCommand(new TimedMotorCommand(elevator, 0.5, 3 * 1000));
-				this.addCommand(new SetDoubleSolenoidCommand(arm, Direction.FORWARD, 1000));
+				this.addCommand(new DriveStraightCommand(drive, -40));
+				this.addCommand(new TurnCommand(drive, gyro, 90, gameData.charAt(0) == 'L'));
+				this.addCommand(new DriveStraightCommand(drive, -54));
+				this.addCommand(new TurnCommand(drive, gyro, 90, gameData.charAt(0) == 'R'));
+				this.addCommand(new DriveStraightCommand(drive, -112));
+				this.addCommand(new TimedMotorCommand(elevator, -0.5, (int)(3.5 * 1000)));
+				this.addCommand(new SetDoubleSolenoidCommand(arm, Direction.REVERSE, 1000));
+				break;
 			}
 		}
 	}
@@ -145,16 +160,9 @@ public class Robot extends RobotBase {
 		ShifterSystem shifter = (ShifterSystem) Subsystem.SHIFTER.getSubsystem();
 
 		LimitedMotorSystem elevator = (LimitedMotorSystem) Subsystem.ELEVATOR.getSubsystem();
-		DoubleSolenoidSystem elevatorBrake = (DoubleSolenoidSystem) Subsystem.ELEVATOR_BRAKE.getSubsystem();
 		DoubleSolenoidSystem arm = (DoubleSolenoidSystem) Subsystem.ARM.getSubsystem();
 
 		drive.customDrive(controller, false);
-
-		if (elevator.getMotor().getSpeed() != 0) {
-			elevatorBrake.setDirection(Direction.REVERSE);
-		} else {
-			elevatorBrake.setDirection(Direction.FORWARD);
-		}
 
 		if (controller2.buttonPressed(Button.A)) {
 			arm.setDirection(Direction.REVERSE);
@@ -191,6 +199,7 @@ public class Robot extends RobotBase {
 		ShifterSystem shifter = (ShifterSystem) Subsystem.SHIFTER.getSubsystem();
 		DoubleSolenoidSystem elevatorBrake = (DoubleSolenoidSystem) Subsystem.ELEVATOR_BRAKE.getSubsystem();
 		DoubleSolenoidSystem arm = (DoubleSolenoidSystem) Subsystem.ARM.getSubsystem();
+		GyroSystem gyro = (GyroSystem) Subsystem.GYRO.getSubsystem();
 		SmartDashboard.putNumber("vars/motors/left/speed", drive.getLeftMotor().getSpeed());
 		SmartDashboard.putNumber("vars/motors/right/speed", drive.getRightMotor().getSpeed());
 		SmartDashboard.putNumber("vars/motors/left/encoder", leftEncoder.getDistance());
@@ -203,6 +212,17 @@ public class Robot extends RobotBase {
 
 		SmartDashboard.putString("vars/arm/state", arm.getDirection() == Direction.FORWARD ? "open" : "closed");
 		SmartDashboard.putNumber("vars/elevator/height", elevator.getCount());
-		SmartDashboard.putNumber("vars/gyro", 0);
+		SmartDashboard.putNumber("vars/gyro", gyro.getAngle());
+	}
+
+	@Override
+	public void periodic() {
+		LimitedMotorSystem elevator = (LimitedMotorSystem) Subsystem.ELEVATOR.getSubsystem();
+		DoubleSolenoidSystem elevatorBrake = (DoubleSolenoidSystem) Subsystem.ELEVATOR_BRAKE.getSubsystem();
+		if (elevator.getMotor().getSpeed() != 0) {
+			elevatorBrake.setDirection(Direction.REVERSE);
+		} else {
+			elevatorBrake.setDirection(Direction.FORWARD);
+		}
 	}
 }

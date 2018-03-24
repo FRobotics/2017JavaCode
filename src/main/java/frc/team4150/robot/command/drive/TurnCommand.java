@@ -1,26 +1,37 @@
 package main.java.frc.team4150.robot.command.drive;
 
 import main.java.frc.team4150.robot.RobotBase;
+import main.java.frc.team4150.robot.subsystem.GyroSystem;
 import main.java.frc.team4150.robot.subsystem.drive.DriveSystem;
 
 public class TurnCommand extends DriveCommand {
 
+	private DriveSystem driveSystem;
+	private GyroSystem gyro;
 	private boolean turnLeft;
 
-	public TurnCommand(DriveSystem driveSystem, double distance, boolean turnLeft) {
-		super(driveSystem, (distance / 360) * 24 * Math.PI);
+	public TurnCommand(DriveSystem driveSystem, GyroSystem gyro, double degrees, boolean turnLeft) {
+		super(degrees, true);
+		this.gyro = gyro;
+		this.driveSystem = driveSystem;
 		this.turnLeft = turnLeft;
 	}
 
 	@Override
 	public boolean periodic(RobotBase robot) {
-		if (isFinished())
+		if (isFinished(gyro.getAngle()))
 			return true;
+		double speed = getSpeed(gyro.getAngle());
 		if (turnLeft)
-			getDriveSystem().setSpeed(-getSpeed(), getSpeed());
+			driveSystem.setSpeed(speed, -speed);
 		else
-			getDriveSystem().setSpeed(getSpeed(), -getSpeed());
+			driveSystem.setSpeed(-speed, speed);
 		return false;
+	}
+
+	@Override
+	public void init() {
+		gyro.reset();
 	}
 
 }

@@ -78,11 +78,13 @@ public abstract class RobotBase extends IterativeRobot {
             }
         }
         updateNTVariables();
+        periodic();
     }
 
     @Override
     public void autonomousInit() {
     	SmartDashboard.putBoolean("vars/teleopEnabled", false);
+    	this.commandManager.clear();
         addCommands();
     }
 
@@ -93,6 +95,7 @@ public abstract class RobotBase extends IterativeRobot {
             subsystem.getSubsystem().periodic();
         }
         updateNTVariables();
+        periodic();
     }
     
     @Override
@@ -126,4 +129,6 @@ public abstract class RobotBase extends IterativeRobot {
     public void addCommand(Command command){
     	this.commandManager.push(command);
     }
+    
+    public void periodic() {}
 }

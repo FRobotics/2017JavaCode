@@ -1,33 +1,25 @@
 package main.java.frc.team4150.robot.command.drive;
 
 import main.java.frc.team4150.robot.command.base.Command;
-import main.java.frc.team4150.robot.subsystem.drive.DriveSystem;
 import main.java.frc.team4150.robot.util.PositionControl;
 
 public abstract class DriveCommand extends Command {
 
-	private DriveSystem driveSystem;
 	private PositionControl posControl;
 
-	public DriveCommand(DriveSystem driveSystem, double distance) {
-		this.driveSystem = driveSystem;
-		this.posControl = new PositionControl(distance, "drive", driveSystem.getWheelRadius());
+	public DriveCommand(double distance, boolean startMax) {
+		this.posControl = new PositionControl(distance, "drive", startMax);
 	}
 
-	public DriveSystem getDriveSystem() {
-		return driveSystem;
+	public boolean isFinished(double measure) {
+		return posControl.onTarget(measure); //HACK
 	}
 
-	public boolean isFinished() {
-		return posControl.onTarget(driveSystem.getLeftEncoder().getDistance()); //HACK
+	public double getSpeed(double measure) {
+		return posControl.getSpeed(measure);
 	}
-
-	public double getSpeed() {
-		return posControl.getSpeed(driveSystem.getDistanceTraveled());
-	}
-
-	@Override
-	public void init() {
-		driveSystem.resetEncoders();
+	
+	public PositionControl getPosControl() {
+		return this.posControl;
 	}
 }

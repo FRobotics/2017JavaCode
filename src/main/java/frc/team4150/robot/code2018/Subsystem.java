@@ -2,6 +2,7 @@ package main.java.frc.team4150.robot.code2018;
 
 import main.java.frc.team4150.robot.subsystem.DoubleSolenoidSystem;
 import main.java.frc.team4150.robot.subsystem.DoubleSolenoidSystem.Direction;
+import main.java.frc.team4150.robot.subsystem.GyroSystem;
 import main.java.frc.team4150.robot.subsystem.base.SubsystemBase;
 import main.java.frc.team4150.robot.subsystem.base.SubsystemEnum;
 import main.java.frc.team4150.robot.subsystem.drive.EncoderSystem;
@@ -17,7 +18,8 @@ public enum Subsystem implements SubsystemEnum {
     SHIFTER(new ShifterSystem(0, 1, Direction.FORWARD, Direction.REVERSE)),
     ELEVATOR(new LimitedMotorSystem(new TalonSRXSystem(14), 5, 6, 4)),
     ARM(new DoubleSolenoidSystem(4, 5, Direction.FORWARD)),
-    ELEVATOR_BRAKE(new DoubleSolenoidSystem(2, 3, Direction.REVERSE))
+    ELEVATOR_BRAKE(new DoubleSolenoidSystem(2, 3, Direction.REVERSE)),
+    GYRO(new GyroSystem())
     ;
 
     private SubsystemBase subsystem;

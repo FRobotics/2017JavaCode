@@ -1,9 +1,6 @@
 package main.java.frc.team4150.robot.code2017;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import main.java.frc.team4150.robot.command.SetDoubleSolenoidCommand;
-import main.java.frc.team4150.robot.command.drive.DriveStraightCommand;
-import main.java.frc.team4150.robot.command.drive.TurnCommand;
 import main.java.frc.team4150.robot.input.joystick.Button;
 import main.java.frc.team4150.robot.input.joystick.ControllerInput;
 import main.java.frc.team4150.robot.subsystem.DoubleSolenoidSystem;
@@ -28,13 +25,13 @@ public class Robot extends main.java.frc.team4150.robot.RobotBase {
 	@Override
 	public void addCommands() {
 		// /!\ 2017 /!\
-		DriveSystem drive = (DriveSystem) Subsystem.DRIVE.getSubsystem();
+		/*DriveSystem drive = (DriveSystem) Subsystem.DRIVE.getSubsystem();
 		DoubleSolenoidSystem gear_platform = (DoubleSolenoidSystem) Subsystem.GEAR_PLATFORM.getSubsystem();
 		DoubleSolenoidSystem gear_arms = (DoubleSolenoidSystem) Subsystem.GEAR_ARMS.getSubsystem();
 		this.addCommand(new DriveStraightCommand(drive, 30));
 		this.addCommand(new TurnCommand(drive, 30, false));
 		this.addCommand(new SetDoubleSolenoidCommand(gear_platform, Direction.FORWARD, 1000));
-		this.addCommand(new SetDoubleSolenoidCommand(gear_arms, Direction.FORWARD, 1000));
+		this.addCommand(new SetDoubleSolenoidCommand(gear_arms, Direction.FORWARD, 1000));*/
 	}
 
 	@Override

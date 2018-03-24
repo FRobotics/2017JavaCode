@@ -39,7 +39,7 @@ public class DriveSystem extends SubsystemBase {
 	 */
 	public void setSpeed(double leftMotorSpeed, double rightMotorSpeed) {
 		this.leftMotor.setSpeed(leftMotorSpeed);
-		this.rightMotor.setSpeed(-rightMotorSpeed);
+		this.rightMotor.setSpeed(-rightMotorSpeed * 0.95);
 	}
 
 	/**
