@@ -6,10 +6,20 @@ import main.java.frc.team4150.robot.subsystem.drive.DriveSystem;
 public class DriveStraightCommand extends DriveCommand {
 
 	private DriveSystem driveSystem;
+	private boolean highShift;
+	
+	public DriveStraightCommand(DriveSystem driveSystem, double threshold, double distance, boolean highShift) {
+		super(distance, 1.0, false, threshold);
+		this.driveSystem = driveSystem;
+		this.highShift = highShift;
+	}
+	
+	public DriveStraightCommand(DriveSystem driveSystem, double distance, boolean highShift) {
+		this(driveSystem, 24, distance, highShift);
+	}
 	
 	public DriveStraightCommand(DriveSystem driveSystem, double distance) {
-		super(distance, false);
-		this.driveSystem = driveSystem;
+		this(driveSystem, 24, distance, false);
 	}
 	
 	@Override
@@ -19,13 +29,17 @@ public class DriveStraightCommand extends DriveCommand {
 
 	@Override
 	public boolean periodic(RobotBase robot) {
-		if(isFinished(driveSystem.getDistanceTraveled())) {
-			driveSystem.setSpeed(0, 0);
+		if(isFinished()) {
+			driveSystem.stop();
 			return true;
 		}
 		double speed = getSpeed(driveSystem.getDistanceTraveled());
-		driveSystem.setSpeed(speed, speed);
+		driveSystem.setSpeed(speed, speed, highShift);
 		return false;
+	}
+	
+	public DriveSystem getDriveSystem() {
+		return driveSystem;
 	}
 
 }

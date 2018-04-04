@@ -2,32 +2,31 @@ package main.java.frc.team4150.robot.command;
 
 import main.java.frc.team4150.robot.RobotBase;
 import main.java.frc.team4150.robot.command.base.Command;
-import main.java.frc.team4150.robot.subsystem.drive.DriveSystem;
+import main.java.frc.team4150.robot.subsystem.drive.ShifterSystem;
 
-public class TimedDriveCommand extends Command {
+public class SetShiftCommand extends Command {
 	private long startTime;
 	private long wait;
-	private DriveSystem motor;
-	private double speed;
+	private ShifterSystem shifter;
+	private boolean high;
 	
-	public TimedDriveCommand (DriveSystem motor, double speed, long wait) {
-		this.motor = motor;
-		this.speed = speed;
+	public SetShiftCommand (ShifterSystem shifter, boolean high, long wait) {
+		this.shifter = shifter;
+		this.high = high;
 		this.wait = wait;
 	}
 
 	@Override
 	public void init() {
 		startTime = System.currentTimeMillis();
+		shifter.setShift(high);
 	}
 
 	@Override
 	public boolean periodic(RobotBase robot) {
 		if (System.currentTimeMillis() - startTime > wait) {
-			motor.stop();
 			return true;
 		}
-		motor.setSpeed(speed, speed, false);
 		return false;
 	}
 }

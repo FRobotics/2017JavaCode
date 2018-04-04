@@ -10,75 +10,54 @@ public class PositionControl {
 	private final double rate;
 	private final double deadband;
 	private final boolean startMax;
+	private final double threshold;
+	private int onTargetCount;
+	private static final int ON_TARGET_GOAL = 3;
+	private double speed;
+	private double slope;
 
-	/**
-	 * @param target
-	 *            - the distance you want to travel
-	 * @param minSpeed
-	 *            - the maximum speed the motor is allowed to travel
-	 * @param maxSpeed
-	 *            - the minimum speed the motor is allowed to travel
-	 * @param rate
-	 *            - the rate at which the speed should increase
-	 */
-	public PositionControl(double target, double minSpeed, double maxSpeed, double rate, double deadband, boolean startMax) {
+	public PositionControl(double target, double minSpeed, double maxSpeed, double rate, double deadband, boolean startMax, double threshold) {
 		this.target = target;
 		this.minSpeed = minSpeed;
 		this.maxSpeed = maxSpeed;
 		this.rate = rate;
 		this.deadband = deadband;
 		this.startMax = startMax;
+		this.threshold = threshold;
+		this.onTargetCount = 0;
+		this.speed = 0;
+		this.slope = ((maxSpeed - minSpeed)/(threshold - deadband));
 	}
 
-	/**
-	 * @param target
-	 *            - the distance you want to travel
-	 * @param minSpeed
-	 *            - the maximum speed the motor is allowed to travel
-	 * @param maxSpeed
-	 *            - the minimum speed the motor is allowed to travel
-	 * @param rate
-	 *            - the rate at which the speed should increase
-	 */
-	public PositionControl(double target, String key, boolean startMax) {
+	public PositionControl(double target, String key, boolean startMax, double threshold) {
 		this(	target, SmartDashboard.getNumber(key + "PosControl/minSpeed", 0.2),
 				SmartDashboard.getNumber(key + "PosControl/maxSpeed", 0.8),
 				SmartDashboard.getNumber(key + "PosControl/rate", 0.1),
-				SmartDashboard.getNumber(key + "PosControl/deadband", 0.5), startMax);
+				SmartDashboard.getNumber(key + "PosControl/deadband", 0.5), startMax, threshold);
 	}
 
-	public PositionControl(String key, boolean startMax) {
-		this(	SmartDashboard.getNumber(key + "PosControl/target", 0),
-				SmartDashboard.getNumber(key + "PosControl/minSpeed", 0.2),
-				SmartDashboard.getNumber(key + "PosControl/maxSpeed", 0.3),
-				SmartDashboard.getNumber(key + "PosControl/rate", 0.1),
-				SmartDashboard.getNumber(key + "PosControl/deadband", 0.5), startMax);
+	public PositionControl(String key, boolean startMax, double threshold) {
+		this(	SmartDashboard.getNumber(key + "PosControl/target", 0), key, startMax, threshold);
+	}
+	
+	public boolean isFinished() {
+		System.out.println("TEST: " + rate);
+		return onTargetCount >= ON_TARGET_GOAL;
 	}
 
-	public boolean onTarget(double distanceTraveled) {
-		double traveled = Math.abs(distanceTraveled);
-		double target = Math.abs(this.target);
-		if (target - traveled < deadband) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	public double getSpeed(double distanceTraveled) {
-		double traveled = Math.abs(distanceTraveled);
-		double target = Math.abs(this.target);
-		double speed = 0;
-		if (traveled < (target - deadband) - (maxSpeed - minSpeed) / rate) {
-			if(startMax) speed = maxSpeed;
-			else speed = Math.min(rate * traveled + minSpeed, maxSpeed);
-		} else if (traveled < target - traveled) {
-			speed = -rate * (traveled - (target - deadband));
-		} else {
+	public double getSpeed(double traveled) {
+		double error = target - traveled;
+		double absError = Math.abs(error);
+		if (absError < deadband) {
 			speed = 0;
+			if(onTargetCount < ON_TARGET_GOAL) onTargetCount++;
+		} else if (absError < threshold) {
+			speed = (absError - deadband) * slope + minSpeed;
+		} else {
+			if(startMax) speed = maxSpeed;
+			else speed = Math.max(Math.min(speed + rate, maxSpeed), minSpeed);
 		}
-		SmartDashboard.putString("testing", traveled + "/" + target + ": " + speed);
-		return this.target > 0 ? speed : -speed;
+		return error >= 0 ? speed : -speed;
 	}
 
 	public double getTarget() {

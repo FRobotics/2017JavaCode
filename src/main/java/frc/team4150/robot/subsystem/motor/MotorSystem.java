@@ -5,7 +5,7 @@ import main.java.frc.team4150.robot.util.Util;
 
 public abstract class MotorSystem extends SubsystemBase {
 
-	public static final double RATE_LIMIT = 0.1;
+	public static final double RATE_LIMIT = 0.05;
 	private double targetSpeed;
 	private double currentSpeed;
 	

@@ -37,10 +37,10 @@ public class QuadDriveSystem extends DriveSystem {
 	}
 	
 	@Override
-	public void setSpeed(double leftMotorSpeed, double rightMotorSpeed) {
+	public void setSpeed(double leftMotorSpeed, double rightMotorSpeed, boolean highShift) {
 		double left = leftMotorSpeed;
 		double right = rightMotorSpeed;
-		super.setSpeed(left, right);
+		super.setSpeed(left, right, highShift);
 		leftMotor2.setSpeed(left);
 		rightMotor2.setSpeed(-right);
 	}

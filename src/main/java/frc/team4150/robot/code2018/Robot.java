@@ -4,10 +4,12 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import main.java.frc.team4150.robot.RobotBase;
 import main.java.frc.team4150.robot.command.SetDoubleSolenoidCommand;
+import main.java.frc.team4150.robot.command.SetShiftCommand;
 import main.java.frc.team4150.robot.command.TimedDriveCommand;
 import main.java.frc.team4150.robot.command.TimedMotorCommand;
 import main.java.frc.team4150.robot.command.WaitCommand;
 import main.java.frc.team4150.robot.command.drive.DriveStraightCommand;
+import main.java.frc.team4150.robot.command.drive.DriveStraightTimeoutCommand;
 import main.java.frc.team4150.robot.command.drive.TurnCommand;
 import main.java.frc.team4150.robot.input.joystick.Axis;
 import main.java.frc.team4150.robot.input.joystick.Button;
@@ -37,14 +39,16 @@ public class Robot extends RobotBase {
 	@Override
 	public void addCommands() {
 		boolean testing = SmartDashboard.getBoolean("testingMode", false);
+		SmartDashboard.putNumber("rateTest", SmartDashboard.getNumber("drivePosControl/rate", -1));
 		if (testing) {
 			// LimitedMotorSystem elevator = (LimitedMotorSystem)
 			// Subsystem.ELEVATOR.getSubsystem();
 			// this.addCommand(new TimedMotorCommand(elevator, -0.7, 2 * 1000));
-			normalAuto();
-			//testingAuto();
+			//normalAuto();
+			testingAuto();
 		} else {
-			baselineAuto();
+			//baselineAuto();
+			normalAuto();
 		}
 	}
 
@@ -65,8 +69,7 @@ public class Robot extends RobotBase {
 				}
 				case "turn": {
 					double degrees = Double.parseDouble(parts[1]);
-					boolean turnLeft = Boolean.parseBoolean(parts[2]);
-					this.addCommand(new TurnCommand(drive, gyro, degrees, turnLeft));
+					this.addCommand(new TurnCommand(drive, gyro, degrees));
 					break;
 				}
 				case "setArm": {
@@ -95,6 +98,7 @@ public class Robot extends RobotBase {
 		DoubleSolenoidSystem arm = (DoubleSolenoidSystem) Subsystem.ARM.getSubsystem();
 		LimitedMotorSystem elevator = (LimitedMotorSystem) Subsystem.ELEVATOR.getSubsystem();
 		GyroSystem gyro = (GyroSystem) Subsystem.GYRO.getSubsystem();
+		ShifterSystem shifter = (ShifterSystem) Subsystem.SHIFTER.getSubsystem();
 
 		boolean colorSwitchSide = false;
 		boolean colorScaleSide = false;
@@ -107,38 +111,44 @@ public class Robot extends RobotBase {
 					|| (position == "right" && gameData.charAt(1) == 'R'))
 				colorScaleSide = true;
 		}
-		colorSwitchSide = true;
-		int i = -1;
+		//colorSwitchSide = false;
+		colorScaleSide = false;
+		int i = 1;
 		switch (position) {
-			case "left":
+			case "right":
 				i = -1;
-			case "right": {
+			case "left": {
 				if (colorSwitchSide) {
 					this.addCommand(new DriveStraightCommand(drive, -140));
-					this.addCommand(new TurnCommand(drive, gyro, 60 * i, position == "left"));
-					this.addCommand(new TimedMotorCommand(elevator, -0.5, (int)(3.5 * 1000)));
-					this.addCommand(new DriveStraightCommand(drive, -18));
-					this.addCommand(new WaitCommand(500));
+					this.addCommand(new TurnCommand(drive, gyro, 90 * i));
+					this.addCommand(new TimedMotorCommand(elevator, -1, (int)(1.5 * 1000)));
+					this.addCommand(new DriveStraightTimeoutCommand(drive, -25, 3000));
+					this.addCommand(new WaitCommand(150));
 					this.addCommand(new SetDoubleSolenoidCommand(arm, Direction.REVERSE, 1000));
 				} else if (colorScaleSide) {
-					this.addCommand(new DriveStraightCommand(drive, -312));
-					this.addCommand(new TurnCommand(drive, gyro, 90 * i, position == "left"));
-					this.addCommand(new TimedMotorCommand(elevator, -0.8, 4500));
-					this.addCommand(new DriveStraightCommand(drive, -18));
-					this.addCommand(new WaitCommand(500));
+					this.addCommand(new SetShiftCommand(shifter, true, 500));
+					this.addCommand(new DriveStraightCommand(drive, 240, -292, true));
+					this.addCommand(new SetShiftCommand(shifter, false, 500));
+					this.addCommand(new TurnCommand(drive, gyro, 90 * i));
+					this.addCommand(new DriveStraightTimeoutCommand(drive, 18, 3000));
+					this.addCommand(new TimedMotorCommand(elevator, -1, 3750));
+					this.addCommand(new DriveStraightTimeoutCommand(drive, -28, 3000));
+					this.addCommand(new WaitCommand(150));
 					this.addCommand(new SetDoubleSolenoidCommand(arm, Direction.REVERSE, 1000));
 				} else {
-					this.addCommand(new DriveStraightCommand(drive, -152));
+					this.addCommand(new DriveStraightCommand(drive, -140));
 				}
 				break;
 			}
 			case "middle": {
+				i = gameData.charAt(0) == 'L' ? 1 : -1;
 				this.addCommand(new DriveStraightCommand(drive, -40));
-				this.addCommand(new TurnCommand(drive, gyro, 90, gameData.charAt(0) == 'L'));
-				this.addCommand(new DriveStraightCommand(drive, -54));
-				this.addCommand(new TurnCommand(drive, gyro, 90, gameData.charAt(0) == 'R'));
-				this.addCommand(new DriveStraightCommand(drive, -112));
-				this.addCommand(new TimedMotorCommand(elevator, -0.5, (int)(3.5 * 1000)));
+				this.addCommand(new TurnCommand(drive, gyro, -90 * i));
+				this.addCommand(new DriveStraightCommand(drive, -47));
+				this.addCommand(new TurnCommand(drive, gyro, 90 * i));
+				this.addCommand(new TimedMotorCommand(elevator, -1, (int)(1.5 * 1000)));
+				this.addCommand(new DriveStraightTimeoutCommand(drive, -112, 2000));
+				this.addCommand(new WaitCommand(150));
 				this.addCommand(new SetDoubleSolenoidCommand(arm, Direction.REVERSE, 1000));
 				break;
 			}
@@ -178,9 +188,9 @@ public class Robot extends RobotBase {
 			elevator.stop();
 		}
 
-		if (controller2.getAxis(Axis.TRIGGER_LEFT) > 0.5) {
+		if (controller.getAxis(Axis.TRIGGER_LEFT) > 0.5) {
 			shifter.setShift(true);
-		} else if (controller2.getAxis(Axis.TRIGGER_RIGHT) > 0.5) {
+		} else if (controller.getAxis(Axis.TRIGGER_RIGHT) > 0.5) {
 			shifter.setShift(false);
 		}
 	}

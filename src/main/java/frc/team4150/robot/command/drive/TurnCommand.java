@@ -8,24 +8,19 @@ public class TurnCommand extends DriveCommand {
 
 	private DriveSystem driveSystem;
 	private GyroSystem gyro;
-	private boolean turnLeft;
 
-	public TurnCommand(DriveSystem driveSystem, GyroSystem gyro, double degrees, boolean turnLeft) {
-		super(degrees, true);
+	public TurnCommand(DriveSystem driveSystem, GyroSystem gyro, double degrees) {
+		super(degrees, 0.8, true, 55);
 		this.gyro = gyro;
 		this.driveSystem = driveSystem;
-		this.turnLeft = turnLeft;
 	}
 
 	@Override
 	public boolean periodic(RobotBase robot) {
-		if (isFinished(gyro.getAngle()))
+		if (isFinished())
 			return true;
 		double speed = getSpeed(gyro.getAngle());
-		if (turnLeft)
-			driveSystem.setSpeed(speed, -speed);
-		else
-			driveSystem.setSpeed(-speed, speed);
+		driveSystem.setSpeed(-speed, speed, false);
 		return false;
 	}
 

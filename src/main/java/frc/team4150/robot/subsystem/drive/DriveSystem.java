@@ -37,16 +37,20 @@ public class DriveSystem extends SubsystemBase {
 	 * @param leftMotorSpeed
 	 * @param rightMotorSpeed
 	 */
-	public void setSpeed(double leftMotorSpeed, double rightMotorSpeed) {
-		this.leftMotor.setSpeed(leftMotorSpeed);
-		this.rightMotor.setSpeed(-rightMotorSpeed * 0.95);
+	public void setSpeed(double leftMotorSpeed, double rightMotorSpeed, double multiplier) {
+		this.leftMotor.setSpeed(leftMotorSpeed * multiplier);
+		this.rightMotor.setSpeed(-rightMotorSpeed);
+	}
+	
+	public void setSpeed(double leftMotorSpeed, double rightMotorSpeed, boolean highShift) {
+		this.setSpeed(leftMotorSpeed, rightMotorSpeed, highShift ? 1.2 : 0.92);
 	}
 
 	/**
 	 * Sets the speed of both motors to 0
 	 */
 	public void stop() {
-		setSpeed(0, 0);
+		setSpeed(0, 0, false);
 	}
 
 	/**
@@ -58,8 +62,8 @@ public class DriveSystem extends SubsystemBase {
 	 * 
 	 * @param controller
 	 */
-	public void customDrive(ControllerInput controller) {
-		customDrive(controller, false);
+	public void customDrive(ControllerInput controller, boolean highShift) {
+		customDrive(controller, false, highShift);
 	}
 
 	/**
@@ -71,7 +75,7 @@ public class DriveSystem extends SubsystemBase {
 	 * 
 	 * @param controller
 	 */
-	public void customDrive(ControllerInput controller, boolean invert) {
+	public void customDrive(ControllerInput controller, boolean invert, boolean highShift) {
 
 		double fb = smooth(controller.getAxis(Axis.LEFT_Y), 0.2, 2); // inverted so up is forward (positive = forward)
 		double lr = smooth(controller.getAxis(Axis.RIGHT_X), 0.2, 3); // inverted so left turns left & right turns right
@@ -114,7 +118,7 @@ public class DriveSystem extends SubsystemBase {
 			right *= -1;
 		}
 
-		setSpeed(left, right);
+		setSpeed(left, right, highShift);
 
 	}
 

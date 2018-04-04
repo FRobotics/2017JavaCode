@@ -54,7 +54,7 @@ public class Robot extends main.java.frc.team4150.robot.RobotBase {
 		SparkSystem climbMotor = (SparkSystem) Subsystem.CLIMB_MOTOR.getSubsystem();
 		DoubleSolenoidSystem climbBrake = (DoubleSolenoidSystem) Subsystem.CLIMB_BRAKE.getSubsystem();
 
-		drive.customDrive(controller);
+		drive.customDrive(controller, false);
 
 		SmartDashboard.putNumber("leftMotor", drive.getLeftMotor().getSpeed());
 		SmartDashboard.putNumber("rightMotor", drive.getRightMotor().getSpeed());
